@@ -52,7 +52,7 @@ class _AddDataState extends State<AddData> {
         QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
             .collection('Stocks')
             .where('category', isEqualTo: selectedOption)
-            .where('stockName', isEqualTo: stockNameController.text)
+            .where('stockName', isEqualTo: stockNameController.text.trim())
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
@@ -71,11 +71,11 @@ class _AddDataState extends State<AddData> {
           await _firestore.collection('Stocks').add({
             'category': selectedOption,
             'status': selectedStatus,
-            'stockName': stockNameController.text,
-            'cmp': cmpController.text,
-            'target': targetController.text,
-            'sl': slController.text,
-            'remark': remarkController.text,
+            'stockName': stockNameController.text.trim(),
+            'cmp': cmpController.text.trim(),
+            'target': targetController.text.trim(),
+            'sl': slController.text.trim(),
+            'remark': remarkController.text.trim(),
             'date': formattedDate, // Store date as string
           });
 
@@ -129,11 +129,11 @@ class _AddDataState extends State<AddData> {
   bool _validateFields() {
     return selectedOption != null &&
         selectedStatus != null &&
-        stockNameController.text.isNotEmpty &&
-        cmpController.text.isNotEmpty &&
-        targetController.text.isNotEmpty &&
+        stockNameController.text.trim().isNotEmpty &&
+        cmpController.text.trim().isNotEmpty &&
+        targetController.text.trim().isNotEmpty &&
         slController.text.isNotEmpty &&
-        remarkController.text.isNotEmpty &&
+        remarkController.text.trim().isNotEmpty &&
         selectedDate != null;
   }
 
@@ -280,20 +280,26 @@ class _AddDataState extends State<AddData> {
                 ),
               ),
             ),
-                ElevatedButton(onPressed: () async  {
-                  _addToFirestore();
-                },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyan,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0))),
-                  child: isLoading
-                      ? const CircularProgressIndicator(color: Colors.white,) // Show the progress indicator
-                      : const Text(
-                    "Submit",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                    child: ElevatedButton(onPressed: () async  {
+                      _addToFirestore();
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.cyan,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0))),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white,) // Show the progress indicator
+                          : const Text(
+                        "Submit",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
 
+                    ),
+                  ),
                 ),
               ],
             ),

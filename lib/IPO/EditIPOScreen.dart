@@ -210,52 +210,85 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             ),
             SizedBox(height: 20),
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-              onPressed: () {
-                bool _isSaving = false;
-                setState(() {
-                  _isSaving = true;
-                });
-                // Convert DateTime objects to Timestamp objects
-                String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-                String formattedDate2 = selectedDate2!.toLocal().toString().split(' ')[0];
-                // Update Firestore document with new data
-                FirebaseFirestore.instance.collection('IPO')
-                    .doc(widget.documentId)
-                    .update({
-                  'status': selectedIPO ,
-                  'stockName': stockNameController.text,
-                  'lot': lotController.text,
-                  'price': priceController.text,
-                  'opendate': formattedDate,
-                  'closedate': formattedDate2,
-                  'remark': remarkController.text,
-                }).then((_) {
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(
-                    msg: 'Data Updated Successfully',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                  );
-                }).catchError((error) {
-                  bool _isSaving = false;
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.cyan,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                    onPressed: () {
+                      // Check if any of the required fields are empty
+                      if (selectedIPO == null ||
+                          stockNameController.text
+                .trim()
+                .isEmpty ||
+                          lotController.text
+                .trim()
+                .isEmpty ||
+                          priceController.text
+                .trim()
+                .isEmpty ||
+                          selectedDate == null ||
+                          selectedDate2 == null ||
+                      remarkController.text.trim().isEmpty)
+                      {
+                        // Display an error message if any required field is empty
+                        Fluttertoast.showToast(
+                          msg: 'All fields must be filled',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                      } else {
+                        // All required fields are filled, proceed with updating Firestore document
+                        bool _isSaving = false;
+                        setState(() {
+                          _isSaving = true;
+                        });
+                        // Convert DateTime objects to Timestamp objects
+                        String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
+                        String formattedDate2 = selectedDate2!.toLocal().toString().split(
+                            ' ')[0];
+                        // Update Firestore document with new data
+                        FirebaseFirestore.instance.collection('IPO')
+                            .doc(widget.documentId)
+                            .update({
+                          'status': selectedIPO,
+                          'stockName': stockNameController.text.trim(),
+                          'lot': lotController.text.trim(),
+                          'price': priceController.text.trim(),
+                          'opendate': formattedDate,
+                          'closedate': formattedDate2,
+                          'remark': remarkController.text.trim(),
+                        }).then((_) {
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: 'Data Updated Successfully',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.cyan,
+                            textColor: Colors.white,
+                          );
+                        }).catchError((error) {
+                          bool _isSaving = false;
 
-                  // Handle error
-                  print("Failed to update document: $error");
-                  setState(() {
-                    _isSaving = false;
-                  });
-                });
-              },
-              child: Text(
-                "Save Changes",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                          // Handle error
+                          print("Failed to update document: $error");
+                          setState(() {
+                            _isSaving = false;
+                          });
+                        });
+                      }
+                    },
+                  child: Text(
+                    "Save Changes",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
               ),
             ),
           ],

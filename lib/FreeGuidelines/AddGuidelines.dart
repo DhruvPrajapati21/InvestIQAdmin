@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_iq/Admin.dart';
 class AddGuidelines extends StatefulWidget {
   const AddGuidelines({super.key});
 
@@ -27,9 +28,9 @@ class _AddGuidelinesState extends State<AddGuidelines> {
         // Check if the stock name is already present in the selected category
         QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
             .collection('Guidelines')
-            .where('headlines', isEqualTo: headlinesController.text)
-            .where('guidelines', isEqualTo: guidelinesController.text)
-            .where('contactus', isEqualTo: contactusController.text)
+            .where('headlines', isEqualTo: headlinesController.text.trim())
+            .where('guidelines', isEqualTo: guidelinesController.text.trim())
+            .where('contactus', isEqualTo: contactusController.text.trim())
 
             .get();
 
@@ -44,9 +45,9 @@ class _AddGuidelinesState extends State<AddGuidelines> {
         } else {
           // Stock name is unique in the selected category, proceed to add data
           await _firestore.collection('Guidelines').add({
-            'headlines': headlinesController.text,
-            'guidelines': guidelinesController.text,
-            'contactus': contactusController.text,
+            'headlines': headlinesController.text.trim(),
+            'guidelines': guidelinesController.text.trim(),
+            'contactus': contactusController.text.trim(),
           });
 
           // Reset values after successful data addition
@@ -93,9 +94,9 @@ class _AddGuidelinesState extends State<AddGuidelines> {
 
   bool _validateFields() {
     return
-          headlinesController.text.isNotEmpty &&
-          guidelinesController.text.isNotEmpty &&
-          contactusController.text.isNotEmpty;
+          headlinesController.text.trim().isNotEmpty &&
+          guidelinesController.text.trim().isNotEmpty &&
+          contactusController.text.trim().isNotEmpty;
 
   }
   @override
@@ -151,22 +152,28 @@ class _AddGuidelinesState extends State<AddGuidelines> {
             ),
           ),
         ),
-                SizedBox(height: 10,),
-                ElevatedButton(
-                  onPressed: () async {
-                    _addToFirestore();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                SizedBox(height: 5,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        _addToFirestore();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyan,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                      child: isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                        "Upload Guidelines!",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
                     ),
-                  ),
-                  child: isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                    "Upload Guidelines!",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ],

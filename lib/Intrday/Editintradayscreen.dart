@@ -4,20 +4,27 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:invest_iq/StatusModel.dart';
+
 class Editintradayscreen extends StatefulWidget {
   final String documentId;
 
-  const Editintradayscreen({Key? key, required this.documentId}) : super(key: key);
+  const Editintradayscreen({Key? key, required this.documentId})
+      : super(key: key);
 
   @override
   _EditintradayscreenState createState() => _EditintradayscreenState();
 }
 
 class _EditintradayscreenState extends State<Editintradayscreen> {
-  List<String> items = [ 'Category','IntraDay', 'Short Term', 'Long Term'];
+  List<String> items = ['Category', 'IntraDay', 'Short Term', 'Long Term'];
   String? selectedOption = 'Category';
 
-  List<String> status = ['Status','Active', 'Achieved', 'SL Hit',];
+  List<String> status = [
+    'Status',
+    'Active',
+    'Achieved',
+    'SL Hit',
+  ];
   String? selectedstatus = 'Status';
   DateTime? selectedDate;
   // Define TextEditingController for each field
@@ -28,12 +35,15 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
   final TextEditingController _slController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
     // Fetch existing data from Firestore and populate the fields
-    FirebaseFirestore.instance.collection('Stocks').doc(widget.documentId).get().then((doc) {
+    FirebaseFirestore.instance
+        .collection('Stocks')
+        .doc(widget.documentId)
+        .get()
+        .then((doc) {
       if (doc.exists) {
         setState(() {
           selectedOption = doc['category'];
@@ -66,56 +76,55 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Edit IntraDay Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),),
+        title: Text(
+          "Edit IntraDay Data",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black)
-                  ),
+                      borderSide: BorderSide(width: 1, color: Colors.black)),
                 ),
                 value: selectedOption,
                 items: items
-                    .map((item) =>
-                    DropdownMenuItem<String>
-                      (value: item,
-                      child: Text(item, style: TextStyle(fontSize: 18)),
-                    ))
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item, style: TextStyle(fontSize: 18)),
+                        ))
                     .toList(),
                 onChanged: (item) => setState(() => selectedOption = item),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 10, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black)
-                  ),
+                      borderSide: BorderSide(width: 1, color: Colors.black)),
                 ),
                 value: selectedstatus,
                 items: status
-                    .map((item) =>
-                    DropdownMenuItem<String>
-                      (value: item,
-                      child: Text(item, style: TextStyle(fontSize: 18)),
-                    ))
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item, style: TextStyle(fontSize: 18)),
+                        ))
                     .toList(),
                 onChanged: (item) => setState(() => selectedstatus = item),
               ),
@@ -128,8 +137,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                     labelText: 'Stock Name',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    )
-                ),
+                    )),
               ),
             ),
             Padding(
@@ -140,8 +148,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                     labelText: 'CMP',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    )
-                ),
+                    )),
               ),
             ),
             Padding(
@@ -152,8 +159,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                     labelText: 'Target',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    )
-                ),
+                    )),
               ),
             ),
             Padding(
@@ -164,8 +170,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                     labelText: 'SL',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    )
-                ),
+                    )),
               ),
             ),
             Padding(
@@ -176,8 +181,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                     labelText: 'Remark',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                    )
-                ),
+                    )),
               ),
             ),
             Padding(
@@ -207,63 +211,89 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
               ),
             ),
             SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.cyan,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+                  onPressed: () {
+                    if (selectedOption == null ||
+                        selectedstatus == null ||
+                        _stockNameController.text.trim().isEmpty ||
+                        _cmpController.text.trim().isEmpty ||
+                        _targetController.text.trim().isEmpty ||
+                        _slController.text.trim().isEmpty ||
+                        _remarkController.text.trim().isEmpty ||
+                        selectedDate == null) {
+                      // Display an error message if any required field is empty
+                      Fluttertoast.showToast(
+                        msg: 'All fields must be filled',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.cyan,
+                        textColor: Colors.white,
+                      );
+                    } else {
+                      // All required fields are filled, proceed with updating Firestore document
+                      setState(() {
+                      });
+                      String formattedDate =
+                          selectedDate!.toLocal().toString().split(' ')[0];
+                      // Update Firestore document with new data
+                      FirebaseFirestore.instance
+                          .collection('Stocks')
+                          .doc(widget.documentId)
+                          .update({
+                        'category': selectedOption,
+                        'status': selectedstatus,
+                        'stockName': _stockNameController.text.trim(),
+                        'cmp': _cmpController.text.trim(),
+                        'target': _targetController.text.trim(),
+                        'sl': _slController.text.trim(),
+                        'remark': _remarkController.text.trim(),
+                        'date': formattedDate,
+                      }).then((_) {
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(
+                          msg: 'Data Updated Successfully',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.cyan,
+                          textColor: Colors.white,
+                        );
+                        if (selectedOption == 'Short Term') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Shortterm()),
+                          );
+                        } else if (selectedOption == 'Long Term') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Longterm()),
+                          );
+                        } // Close the edit screen
+                      }).catchError((error) {
+                        bool _isSaving = false;
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-              onPressed: () {
-                bool _isSaving = false;
-                setState(() {
-                  _isSaving = true;
-                });
-                String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-                // Update Firestore document with new data
-                FirebaseFirestore.instance.collection('Stocks')
-                    .doc(widget.documentId)
-                    .update({
-                  'category':selectedOption,
-                  'status': selectedstatus ,
-                  'stockName': _stockNameController.text,
-                  'cmp': _cmpController.text,
-                  'target': _targetController.text,
-                  'sl': _slController.text,
-                  'remark': _remarkController.text,
-                  'date': formattedDate,
-                }).then((_) {
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(
-                    msg: 'Data Updated Successfully',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                  );
-                  if(selectedOption == 'Short Term') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Shortterm()),
-                    );
-                  } else if(selectedOption == 'Long Term') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Longterm()),
-                    );
-                  }// Close the edit screen
-                }).catchError((error) {
-                  bool _isSaving = false;
-
-                  // Handle error
-                  print("Failed to update document: $error");
-                  setState(() {
-                    _isSaving = false;
-                  });
-                });
-              },
-              child: Text(
-                "Save Changes",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                        // Handle error
+                        print("Failed to update document: $error");
+                        setState(() {
+                          _isSaving = false;
+                        });
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Save Changes",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
               ),
             ),
           ],

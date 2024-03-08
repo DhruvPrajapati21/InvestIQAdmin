@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Intrday/Intraday.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
+import 'package:invest_iq/StatusModel.dart';
 class Editshortermscreen extends StatefulWidget {
   final String documentId;
 
@@ -207,64 +208,97 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              child: SizedBox(width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.cyan,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0))),
+    onPressed: () {
+      if (selectedOption == null ||
+          selectedstatus == null ||
+          _stockNameController.text
+              .trim()
+              .isEmpty ||
+          _cmpController.text
+              .trim()
+              .isEmpty ||
+          _targetController.text
+              .trim()
+              .isEmpty ||
+          _slController.text
+              .trim()
+              .isEmpty ||
+          _remarkController.text
+              .trim()
+              .isEmpty ||
+          selectedDate == null) {
+        // Display an error message if any required field is empty
+        Fluttertoast.showToast(
+          msg: 'All fields must be filled',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.cyan,
+          textColor: Colors.white,
+        );
+      } else {
+        // All required fields are filled, proceed with updating Firestore document
+        bool _isSaving = false;
+        setState(() {
+          _isSaving = true;
+        });
+        String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
+        // Update Firestore document with new data
+        FirebaseFirestore.instance.collection('Stocks')
+            .doc(widget.documentId)
+            .update({
+          'category': selectedOption,
+          'status': selectedstatus,
+          'stockName': _stockNameController.text.trim(),
+          'cmp': _cmpController.text.trim(),
+          'target': _targetController.text.trim(),
+          'sl': _slController.text.trim(),
+          'remark': _remarkController.text.trim(),
+          'date': formattedDate,
+        }).then((_) {
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: 'Data Updated Successfully',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.cyan,
+            textColor: Colors.white,
+          );
+          if (selectedOption == 'IntraDay') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Intraday()),
+            );
+          } else if (selectedOption == 'Long Term') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Longterm()),
+            );
+          } // Close the edit screen
+        }).catchError((error) {
+          bool _isSaving = false;
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-              onPressed: () {
-                bool _isSaving = false;
-                setState(() {
-                  _isSaving = true;
-                });
-                String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-                // Update Firestore document with new data
-                FirebaseFirestore.instance.collection('Stocks')
-                    .doc(widget.documentId)
-                    .update({
-                  'category': selectedOption,
-                  'status': selectedstatus,
-                  'stockName': _stockNameController.text,
-                  'cmp': _cmpController.text,
-                  'target': _targetController.text,
-                  'sl': _slController.text,
-                  'remark': _remarkController.text,
-                  'date': formattedDate,
-                }).then((_) {
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(
-                    msg: 'Data Updated Successfully',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                  );
-                  if(selectedOption == 'IntraDay') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Intraday()),
-                    );
-                  } else if(selectedOption == 'Long Term') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Longterm()),
-                    );
-                  }// Close the edit screen
-                }).catchError((error) {
-                  bool _isSaving = false;
-
-                  // Handle error
-                  print("Failed to update document: $error");
-                  setState(() {
-                    _isSaving = false;
-                  });
-                });
-              },
-              child: Text(
-                "Save Changes",
-                style: TextStyle(fontSize: 16, color: Colors.white),
+          // Handle error
+          print("Failed to update document: $error");
+          setState(() {
+            _isSaving = false;
+          });
+        });
+      }
+    },
+                  child: Text(
+                    "Save Changes",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
               ),
             ),
           ],

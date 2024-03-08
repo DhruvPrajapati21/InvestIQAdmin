@@ -192,19 +192,19 @@ class IPO extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Card(
-                  color: Colors.lightBlueAccent,
+                  color: Colors.white60,
                   margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Status: ${IPOModel.status}'),
-                        Text('Stock Name: ${IPOModel.stockName}'),
-                        Text('Lot: ${IPOModel.lot}'),
-                        Text('Price: ${IPOModel.price}'),
-                        Text('Open Date: ${IPOModel.opendate}'),
-                        Text('Close Date: ${IPOModel.closedate}'),
-                        Text('Remark: ${IPOModel.remark}'),
+                        Text('Status: ${IPOModel.status.trim()}'),
+                        Text('Stock Name: ${IPOModel.stockName.trim()}'),
+                        Text('Lot: ${IPOModel.lot.trim()}'),
+                        Text('Price: ${IPOModel.price.trim()}'),
+                        Text('Open Date: ${IPOModel.opendate.trim()}'),
+                        Text('Close Date: ${IPOModel.closedate.trim()}'),
+                        Text('Remark: ${IPOModel.remark.trim()}'),
                       ],
                     ),
                     trailing: Row(

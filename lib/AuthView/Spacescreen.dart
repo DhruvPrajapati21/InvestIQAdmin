@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:invest_iq/Login.dart';
+import 'package:invest_iq/AuthView/Login.dart';
 class Spacescreen extends StatefulWidget {
   const Spacescreen({super.key});
 
@@ -42,6 +41,14 @@ class _SpacescreenState extends State<Spacescreen> {
                        SizedBox(width: 10,height: 10,),
                          ],
                        ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   TextButton(onPressed: (){
+
+                   }, child: Text("Let's Navigate the Markets Together for Profitable Trades!!",style: TextStyle(fontStyle: FontStyle.italic,fontSize: 12,color: Colors.cyan),)),
+                 ],
+               ),
                   CircularProgressIndicator(),
                SizedBox(width: 50,height: 50,),
              ],

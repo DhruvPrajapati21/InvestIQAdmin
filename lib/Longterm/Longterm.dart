@@ -233,7 +233,7 @@ class Longterm extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Card(
-                  color: Colors.lightBlueAccent,
+                  color: Colors.white60,
                   margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Column(
