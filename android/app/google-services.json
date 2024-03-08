@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218568396302",
+    "project_id": "invest-iq-47d34",
+    "storage_bucket": "invest-iq-47d34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218568396302:android:eed724a7023f764b02f65f",
+        "android_client_info": {
+          "package_name": "com.example.invest_iq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRO7D3vPHuO1xctgylVy29NvQmad-6IGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
