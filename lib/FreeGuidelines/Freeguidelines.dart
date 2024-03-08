@@ -54,7 +54,7 @@ class _FreeguidelinesState extends State<Freeguidelines> {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
               child: Card(
-              color: Colors.transparent,
+                color: Colors.white60,
               margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Padding(

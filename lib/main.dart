@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:invest_iq/Spacescreen.dart';
-import 'Login.dart';
+import 'package:invest_iq/AuthView/Spacescreen.dart';
+import 'AuthView/Login.dart';
 import 'Admin.dart';
 
 void main() {
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
+
       home: Spacescreen(),
     );
   }

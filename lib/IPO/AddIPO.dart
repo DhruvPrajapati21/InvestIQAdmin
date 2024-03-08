@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_iq/Admin.dart';
 
 class AddIPO extends StatefulWidget {
   const AddIPO({Key? key}) : super(key: key);
@@ -60,16 +61,18 @@ class _AddIPOState extends State<AddIPO> {
       });
 
       try {
+        String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
+        String formattedDate2 = selectedDate2!.toLocal().toString().split(' ')[0];
         // Check if the stock name is already present in the selected category
         QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
             .collection('IPO')
             .where('status', isEqualTo: selectedIPO)
-            .where('stockName', isEqualTo: stockNameController.text)
-            .where('lot', isEqualTo: lotController.text)
-            .where('price', isEqualTo: priceController.text)
+            .where('stockName', isEqualTo: stockNameController.text.trim())
+            .where('lot', isEqualTo: lotController.text.trim())
+            .where('price', isEqualTo: priceController.text.trim())
             .where('opendate', isEqualTo: selectedDate)
             .where('closedate', isEqualTo: selectedDate2)
-            .where('remark', isEqualTo: remarkController.text)
+            .where('remark', isEqualTo: remarkController.text.trim())
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
@@ -86,12 +89,12 @@ class _AddIPOState extends State<AddIPO> {
           // Stock name is unique in the selected category, proceed to add data
           await _firestore.collection('IPO').add({
             'status': selectedIPO,
-            'stockName': stockNameController.text,
-            'lot': lotController.text,
-            'price': priceController.text,
-            'opendate': formattedDate,
-            'closedate': formattedDate2,
-            'remark': remarkController.text,
+            'stockName': stockNameController.text.trim(),
+            'lot': lotController.text.trim(),
+            'price': priceController.text.trim(),
+            'opendate': formattedDate.trim(),
+            'closedate': formattedDate2.trim(),
+            'remark': remarkController.text.trim(),
           });
 
           // Reset values after successful data addition
@@ -142,12 +145,12 @@ class _AddIPOState extends State<AddIPO> {
 
   bool _validateFields() {
     return selectedIPO != null &&
-        stockNameController.text.isNotEmpty &&
-        lotController.text.isNotEmpty &&
-        priceController.text.isNotEmpty &&
+        stockNameController.text.trim().isNotEmpty &&
+        lotController.text.trim().isNotEmpty &&
+        priceController.text.trim().isNotEmpty &&
         selectedDate != null &&
         selectedDate2 != null &&
-        remarkController.text.isNotEmpty;
+        remarkController.text.trim().isNotEmpty;
   }
 
   @override
@@ -220,7 +223,7 @@ class _AddIPOState extends State<AddIPO> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: priceController,
-                  keyboardType: TextInputType.numberWithOptions(),
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Price',
                     border: OutlineInputBorder(
@@ -293,21 +296,28 @@ class _AddIPOState extends State<AddIPO> {
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  _addToFirestore();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+              SizedBox(height: 5,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      _addToFirestore();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.cyan,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    child: isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                      "Submit",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
-                ),
-                child: isLoading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                  "Submit",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ],
