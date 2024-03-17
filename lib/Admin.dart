@@ -4,12 +4,12 @@ import 'package:invest_iq/AuthView/Login.dart';
 import 'package:invest_iq/FreeGuidelines/AddGuidelines.dart';
 import 'package:invest_iq/FreeGuidelines/Freeguidelines.dart';
 import 'package:invest_iq/IPO/IPO.dart';
-import 'package:invest_iq/Intrday/Intraday.dart';
+import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/All Users/Allusers.dart';
 import 'package:invest_iq/IPO/AddIPO.dart';
-import 'package:invest_iq/Intrday/Intraday.dart';
+import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Admin extends StatefulWidget {

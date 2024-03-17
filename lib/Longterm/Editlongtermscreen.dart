@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
-import 'package:invest_iq/Intrday/Intraday.dart';
+import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:invest_iq/StatusModel.dart';
 class Editlongtermscreen extends StatefulWidget {
   final String documentId;

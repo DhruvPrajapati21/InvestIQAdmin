@@ -140,7 +140,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invest_iq/StatusModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:invest_iq/Intrday/Editintradayscreen.dart';
+import 'package:invest_iq/Intraday/Editintradayscreen.dart';
 
 class Intraday extends StatelessWidget {
   @override
