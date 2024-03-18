@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:invest_iq/FreeGuidelines/Editfreeguidelinesscreen.dart';
 import 'package:invest_iq/FreeGuidelines/GuidelinesModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Admin.dart';
+
 class Freeguidelines extends StatefulWidget {
   const Freeguidelines({super.key});
 
@@ -16,15 +18,18 @@ class _FreeguidelinesState extends State<Freeguidelines> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Free Guidelines", style: TextStyle(
+        title: Text(
+          "Free Guidelines",
+          style: TextStyle(
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
-            color: Colors.white),),
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('Guidelines')
-            .snapshots(),// Fetch only 'IntraDay' category.snapshots(),
+        stream: FirebaseFirestore.instance.collection('Guidelines').snapshots(), // Fetch only 'IntraDay' category.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -42,7 +47,6 @@ class _FreeguidelinesState extends State<Freeguidelines> {
             GuidelinesModel guidelines = GuidelinesModel.fromSnapshot(doc);
             GuidelinesModel contactus = GuidelinesModel.fromSnapshot(doc);
 
-
             Guide.add(headlines);
             Guide.add(guidelines);
             Guide.add(contactus);
@@ -54,13 +58,12 @@ class _FreeguidelinesState extends State<Freeguidelines> {
               var GuidelinesModel = Guidelines[index];
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
-              child: Card(
-                color: Colors.white60,
-              margin: EdgeInsets.all(11.0),
+                child: Card(
+                  color: Colors.white60,
+                  margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 10),
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -68,16 +71,36 @@ class _FreeguidelinesState extends State<Freeguidelines> {
                             '${GuidelinesModel.headlines}',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 30,),
-                          Text(' ${GuidelinesModel.guidelines}'),
-                          SizedBox(height: 30,),
-                          Text(' ${GuidelinesModel.contactus}',
-                          style: TextStyle(color: Colors.blue),),
+                          SizedBox(height: 30),
+                          Text('${GuidelinesModel.guidelines}'),
+                          SizedBox(height: 30),
+                          Text(
+                            '${GuidelinesModel.contactus}',
+                            style: TextStyle(color: Colors.blue),
+                          ),
                         ],
                       ),
                     ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit, color: Colors.teal),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Editfreeguidelinesscreen(
+                                  documentId: snapshot.data!.docs[index].id,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-              ),
+                ),
               );
             },
           );
