@@ -179,6 +179,7 @@ import 'package:invest_iq/Longterm/Editlongtermscreen.dart';
 import 'package:invest_iq/StatusModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
+import 'package:intl/intl.dart';
 
 class Longterm extends StatelessWidget {
   @override
@@ -248,7 +249,7 @@ class Longterm extends StatelessWidget {
                         Text('Target: ${statusModel.target}'),
                         Text('SL: ${statusModel.sl}'),
                         Text('Remark: ${statusModel.remark}'),
-                        Text('Date: ${statusModel.date}'),
+                        Text('Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(statusModel.date.trim()))}'),
                       ],
                     ),
                     trailing: Row(

@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:invest_iq/StatusModel.dart';
-
+import 'package:intl/intl.dart';
 class Editintradayscreen extends StatefulWidget {
   final String documentId;
 
@@ -195,7 +195,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                 controller: TextEditingController(
                   text: selectedDate == null
                       ? ''
-                      : 'Selected Date: ${selectedDate!.toString().substring(0, 10)}',
+                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                 ),
                 decoration: InputDecoration(
                   labelText: "Select Date",

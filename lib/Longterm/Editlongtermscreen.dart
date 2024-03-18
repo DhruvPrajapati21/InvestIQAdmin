@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/Intraday/Intraday.dart';
+import 'package:intl/intl.dart';
 import 'package:invest_iq/StatusModel.dart';
 class Editlongtermscreen extends StatefulWidget {
   final String documentId;
@@ -192,7 +193,7 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
                 controller: TextEditingController(
                   text: selectedDate == null
                       ? ''
-                      : 'Selected Date: ${selectedDate!.toString().substring(0, 10)}',
+                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                 ),
                 decoration: InputDecoration(
                   labelText: "Select Date",

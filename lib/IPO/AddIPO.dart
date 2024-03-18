@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_iq/Admin.dart';
+import 'package:intl/intl.dart';
 
 class AddIPO extends StatefulWidget {
   const AddIPO({Key? key}) : super(key: key);
@@ -245,7 +246,7 @@ class _AddIPOState extends State<AddIPO> {
                   controller: TextEditingController(
                     text: selectedDate == null
                         ? ''
-                        : 'Selected Date: ${selectedDate!.toString().substring(0, 10)}',
+                        : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                   ),
                   decoration: InputDecoration(
                     labelText: "Opening Date",
@@ -271,7 +272,7 @@ class _AddIPOState extends State<AddIPO> {
                   controller: TextEditingController(
                     text: selectedDate2 == null
                         ? ''
-                        : 'Selected Date: ${selectedDate2!.toString().substring(0, 10)}',
+                        : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate2!)}',
                   ),
                   decoration: InputDecoration(
                     labelText: "Closing Date",

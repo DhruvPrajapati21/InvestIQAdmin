@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 class AddData extends StatefulWidget {
   const AddData({super.key});
 
@@ -274,7 +275,7 @@ class _AddDataState extends State<AddData> {
                 controller: TextEditingController(
                   text: selectedDate == null
                       ? ''
-                      : 'Selected Date: ${selectedDate!.toString().substring(0, 10)}',
+                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                 ),
                 decoration: InputDecoration(
                   labelText: "Select Date",

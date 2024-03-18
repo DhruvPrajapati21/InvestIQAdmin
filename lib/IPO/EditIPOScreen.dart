@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/IPO/IPOModel.dart';
 import 'package:invest_iq/IPO/IPO.dart';
@@ -155,7 +156,7 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
                 controller: TextEditingController(
                   text: selectedDate == null
                       ? ''
-                      : 'Selected Date: ${selectedDate!.toString().substring(0, 10)}',
+                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                 ),
                 decoration: InputDecoration(
                   labelText: "Opening Date",
@@ -181,7 +182,7 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
                 controller: TextEditingController(
                   text: selectedDate2 == null
                       ? ''
-                      : 'Selected Date: ${selectedDate2!.toString().substring(0, 10)}',
+                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate2!)}',
                 ),
                 decoration: InputDecoration(
                   labelText: "Closing Date",
