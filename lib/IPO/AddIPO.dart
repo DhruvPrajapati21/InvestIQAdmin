@@ -99,7 +99,7 @@ class _AddIPOState extends State<AddIPO> {
 
           // Reset values after successful data addition
           setState(() {
-            selectedIPO = 'Status';
+            selectedIPO = null;
             stockNameController.clear();
             lotController.clear();
             priceController.clear();

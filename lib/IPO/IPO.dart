@@ -198,7 +198,7 @@ class IPO extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Status: ${IPOModel.status.trim()}'),
+                        Text('Status: ${IPOModel.status}'),
                         Text('Stock Name: ${IPOModel.stockName.trim()}'),
                         Text('Lot: ${IPOModel.lot.trim()}'),
                         Text('Price: ${IPOModel.price.trim()}'),

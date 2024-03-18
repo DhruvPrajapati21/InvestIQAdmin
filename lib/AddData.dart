@@ -210,6 +210,7 @@ class _AddDataState extends State<AddData> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: cmpController,
+                    keyboardType: TextInputType.numberWithOptions(),
                     decoration: InputDecoration(
                         labelText: 'CMP',
                         border: OutlineInputBorder(
@@ -222,6 +223,7 @@ class _AddDataState extends State<AddData> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: targetController,
+                    keyboardType: TextInputType.numberWithOptions(),
                     decoration: InputDecoration(
                         labelText: 'Target',
                         border: OutlineInputBorder(
@@ -234,6 +236,7 @@ class _AddDataState extends State<AddData> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: slController,
+                    keyboardType: TextInputType.numberWithOptions(),
                     decoration: InputDecoration(
                         labelText: 'SL',
                         border: OutlineInputBorder(
