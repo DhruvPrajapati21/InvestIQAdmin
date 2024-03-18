@@ -185,6 +185,10 @@ class _AddIPOState extends State<AddIPO> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(width: 1, color: Colors.black),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                    ),
                   ),
                   value: selectedIPO,
                   items: ipo

@@ -169,6 +169,10 @@ class _AddDataState extends State<AddData> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(width: 1, color: Colors.black)
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                      ),
                     ),
                     value: selectedOption,
                     items: items
@@ -182,26 +186,29 @@ class _AddDataState extends State<AddData> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(width: 1, color: Colors.black)
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(width: 1, color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
                       ),
                     ),
                     value: selectedStatus,
-                    items: items1
-                        .map((item1) =>
-                        DropdownMenuItem<String>
-                          (value: item1,
+                    items: items1.map((item1) =>
+                        DropdownMenuItem<String>(
+                          value: item1,
                           child: Text(item1, style: TextStyle(fontSize: 18)),
-                        ))
-                        .toList(),
+                        )
+                    ).toList(),
                     onChanged: (item1) => setState(() => selectedStatus = item1),
                   ),
                 ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
