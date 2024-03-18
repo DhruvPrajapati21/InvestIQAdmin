@@ -41,6 +41,10 @@ class _AddDataState extends State<AddData> {
     }
   }
 
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
   Future<void> _addToFirestore() async {
     if (_validateFields()) {
       setState(() {
@@ -64,8 +68,8 @@ class _AddDataState extends State<AddData> {
             ),
           );
         } else {
-          // Convert selectedDate to a formatted string
-          String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
+          // Format the selected date
+          String formattedDate = _formatDate(selectedDate!);
 
           // Stock name is unique in the selected category, proceed to add data
           await _firestore.collection('Stocks').add({
@@ -125,6 +129,7 @@ class _AddDataState extends State<AddData> {
       );
     }
   }
+
 
   bool _validateFields() {
     return selectedOption != null &&

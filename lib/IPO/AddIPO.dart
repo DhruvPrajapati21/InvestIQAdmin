@@ -23,6 +23,9 @@ class _AddIPOState extends State<AddIPO> {
   TextEditingController lotController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -61,8 +64,10 @@ class _AddIPOState extends State<AddIPO> {
       });
 
       try {
-        String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-        String formattedDate2 = selectedDate2!.toLocal().toString().split(' ')[0];
+        // Format selected dates
+        String formattedDate = _formatDate(selectedDate!);
+        String formattedDate2 = _formatDate(selectedDate2!);
+
         // Check if the stock name is already present in the selected category
         QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
             .collection('IPO')
@@ -70,8 +75,8 @@ class _AddIPOState extends State<AddIPO> {
             .where('stockName', isEqualTo: stockNameController.text.trim())
             .where('lot', isEqualTo: lotController.text.trim())
             .where('price', isEqualTo: priceController.text.trim())
-            .where('opendate', isEqualTo: selectedDate)
-            .where('closedate', isEqualTo: selectedDate2)
+            .where('opendate', isEqualTo: formattedDate)
+            .where('closedate', isEqualTo: formattedDate2)
             .where('remark', isEqualTo: remarkController.text.trim())
             .get();
 
@@ -84,16 +89,14 @@ class _AddIPOState extends State<AddIPO> {
             ),
           );
         } else {
-          String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-          String formattedDate2 = selectedDate2!.toLocal().toString().split(' ')[0];
           // Stock name is unique in the selected category, proceed to add data
           await _firestore.collection('IPO').add({
             'status': selectedIPO,
             'stockName': stockNameController.text.trim(),
             'lot': lotController.text.trim(),
             'price': priceController.text.trim(),
-            'opendate': formattedDate.trim(),
-            'closedate': formattedDate2.trim(),
+            'opendate': formattedDate,
+            'closedate': formattedDate2,
             'remark': remarkController.text.trim(),
           });
 
@@ -142,6 +145,7 @@ class _AddIPOState extends State<AddIPO> {
       );
     }
   }
+
 
   bool _validateFields() {
     return selectedIPO != null &&
