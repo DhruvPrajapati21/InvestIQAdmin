@@ -84,6 +84,7 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
           "Edit IPO Data",
           style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -186,7 +186,9 @@ class Longterm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child:Text('LongTerm Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),)),
+        title: Text('LongTerm Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Stocks')

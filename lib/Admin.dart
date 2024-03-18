@@ -102,21 +102,15 @@ class _AdminState extends State<Admin> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan,
-          title: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Invest-IQ",
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+          title: Text(
+            "Invest-IQ",
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
+          centerTitle: true,
         ),
         drawer: Drawer(
           child: ListView(

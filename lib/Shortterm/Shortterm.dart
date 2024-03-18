@@ -151,7 +151,9 @@ class Shortterm extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child:Text('ShortTerm Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),)),
+        title: Text('ShortTerm Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Stocks')

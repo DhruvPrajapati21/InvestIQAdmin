@@ -12,10 +12,12 @@ class _AllusersState extends State<Allusers> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child: Text("All Users Data", style: TextStyle(
+        title: Text("All Users Data", style: TextStyle(
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
-            color: Colors.white),),),
+            color: Colors.white),
+        ),
+        centerTitle: true,
       ),
     );
   }

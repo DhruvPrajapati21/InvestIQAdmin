@@ -162,16 +162,15 @@ class _AddIPOState extends State<AddIPO> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(
-          child: Text(
-            "Adding IPO",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              color: Colors.white,
-            ),
+        title: Text(
+          "Adding IPO",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            color: Colors.white,
           ),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(

@@ -72,7 +72,9 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Edit ShortTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),),
+        title: Text("Edit ShortTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

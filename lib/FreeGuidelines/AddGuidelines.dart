@@ -104,7 +104,8 @@ class _AddGuidelinesState extends State<AddGuidelines> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child: Text("Guidelines Form",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),),),
+        title: Text("Guidelines Form",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(

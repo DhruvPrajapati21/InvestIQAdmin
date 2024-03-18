@@ -88,6 +88,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
               fontStyle: FontStyle.italic,
               color: Colors.white),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

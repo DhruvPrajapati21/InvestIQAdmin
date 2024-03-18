@@ -148,10 +148,12 @@ class _AddDataState extends State<AddData> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.cyan,
-            title: Center(child: Text("New Stock", style: TextStyle(
+            title: Text("New Stock", style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
-                color: Colors.white),),),
+                color: Colors.white),
+            ),
+            centerTitle: true,
           ),
           body: SingleChildScrollView(
           child:Center(

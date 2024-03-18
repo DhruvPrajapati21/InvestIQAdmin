@@ -107,7 +107,9 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child: Text("Invest-IQ",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),),),
+        title: Text("Invest-IQ",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body:SingleChildScrollView(
         child: Form(

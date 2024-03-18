@@ -16,10 +16,11 @@ class _FreeguidelinesState extends State<Freeguidelines> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Center(child: Text("Free Guidelines", style: TextStyle(
+        title: Text("Free Guidelines", style: TextStyle(
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
-            color: Colors.white),),),
+            color: Colors.white),),
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Guidelines')

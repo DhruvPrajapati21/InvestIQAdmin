@@ -72,7 +72,9 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Edit LongTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),),
+        title: Text("Edit LongTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
