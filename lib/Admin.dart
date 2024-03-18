@@ -50,6 +50,12 @@ class _AdminState extends State<Admin> {
           content: Text("Are you sure you want to logout?"),
           actions: <Widget>[
             TextButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
               child: Text("Yes"),
               onPressed: () {
                 FirebaseAuth.instance.signOut();
@@ -59,12 +65,6 @@ class _AdminState extends State<Admin> {
                   ),
                       (route) => false,
                 );
-              },
-            ),
-            TextButton(
-              child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
               },
             ),
           ],
