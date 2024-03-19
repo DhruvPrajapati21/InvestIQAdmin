@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:invest_iq/AuthView/Login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
   @override
   State<Signup> createState() => _SignupState();
 }
+
 class _SignupState extends State<Signup> {
   final Form_key = GlobalKey<FormState>();
   var password = false, con_password = true;
@@ -107,21 +109,31 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Invest-IQ",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
+        title: Text(
+          "Invest-IQ",
+          style: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         centerTitle: true,
       ),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Form(
             key: Form_key,
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 30),
-                  child: Image.asset("assets/images/l1.png",width: 130,height: 130,),
+                  child: Image.asset(
+                    "assets/images/l1.png",
+                    width: 130,
+                    height: 130,
+                  ),
                 ),
                 SizedBox(
-                  width: 20, height: 20,
+                  width: 20,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -140,8 +152,7 @@ class _SignupState extends State<Signup> {
                         prefixIconColor: Colors.cyan,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                        )
-                    ),
+                        )),
                   ),
                 ),
                 Padding(
@@ -163,8 +174,7 @@ class _SignupState extends State<Signup> {
                         prefixIconColor: Colors.cyan,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                        )
-                    ),
+                        )),
                   ),
                 ),
                 Padding(
@@ -179,11 +189,11 @@ class _SignupState extends State<Signup> {
                     },
                     obscureText: !passwordVisible,
                     decoration: InputDecoration(
-                        labelText: 'Enter Your Password',
-                        labelStyle: TextStyle(color: Colors.cyan),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                      labelText: 'Enter Your Password',
+                      labelStyle: TextStyle(color: Colors.cyan),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       prefixIcon: const Icon(Icons.lock_outline_rounded),
                       prefixIconColor: Colors.cyan,
                       suffixIconColor: Colors.cyan,
@@ -202,7 +212,6 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -227,13 +236,10 @@ class _SignupState extends State<Signup> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
-                            if(con_password == true)
-                            {
+                            if (con_password == true) {
                               con_password = false;
-                            }
-                            else
-                            {
-                              con_password= true;
+                            } else {
+                              con_password = true;
                             }
 
                             con_passwordVisible = !con_passwordVisible;
@@ -249,54 +255,73 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
                         if (Form_key.currentState!.validate()) {
-                          try {
-                            await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                                email: email.text, password: pass.text)
-                                .then((value) {
-                              FirebaseFirestore.instance.collection("Admin").add({
-                                "Username": name.text.trim(),
-                                "Email": email.text.trim(),
-                                "Password": pass.text.trim(),
+                          if (pass.text == cpass.text) {
+                            // Check if passwords match
+                            try {
+                              await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                      email: email.text, password: pass.text)
+                                  .then((value) {
+                                FirebaseFirestore.instance
+                                    .collection("Admin")
+                                    .add({
+                                  "Username": name.text.trim(),
+                                  "Email": email.text.trim(),
+                                  "Password": pass.text.trim(),
+                                });
                               });
-                            });
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Login()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Login()));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "SignUp Successfully",
+                                    style: TextStyle(color: Colors.cyan),
+                                  ),
+                                ),
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'weak-password') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Password is too weak",
+                                      style: TextStyle(color: Colors.cyan),
+                                    ),
+                                  ),
+                                );
+                              } else if (e.code == 'email-already-in-use') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Email is already Registered",
+                                      style: TextStyle(color: Colors.cyan),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                  "SignUp Successfully",
+                                  "Passwords do not match",
                                   style: TextStyle(color: Colors.cyan),
                                 ),
                               ),
                             );
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Password is too weak",
-                                    style: TextStyle(color: Colors.cyan),
-                                  ),
-                                ),
-                              );
-                            } else if (e.code == 'email-already-in-use') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Email is already Registered",
-                                    style: TextStyle(color: Colors.cyan),
-                                  ),
-                                ),
-                              );
-                            }
                           }
                         }
+
                         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
                       },
                       style: ElevatedButton.styleFrom(
@@ -317,18 +342,17 @@ class _SignupState extends State<Signup> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Already an account?"),
-                    TextButton(onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
-                    }, child: Text("Join us Now >>"))
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
+                        },
+                        child: Text("Join us Now >>"))
                   ],
                 )
               ],
-            )
-
-        ),
-      )
-
-      ,
+            )),
+      ),
     );
   }
 }
