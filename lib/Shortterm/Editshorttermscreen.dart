@@ -20,15 +20,15 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
 
   List<String> status = ['Status','Active', 'Achieved', 'SL Hit',];
   String? selectedstatus = 'Status';
-
-
   DateTime? selectedDate;
   // Define TextEditingController for each field
+  final TextEditingController _statusController = TextEditingController();
   final TextEditingController _stockNameController = TextEditingController();
   final TextEditingController _cmpController = TextEditingController();
   final TextEditingController _targetController = TextEditingController();
   final TextEditingController _slController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
+
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
           _targetController.text = doc['target'];
           _slController.text = doc['sl'];
           _remarkController.text = doc['remark'];
-          selectedDate = DateTime.parse(doc['date']);
+          selectedDate = doc['date'] != null ? DateTime.parse(doc['date']) : null;
         });
       }
     }).catchError((error) {
@@ -90,6 +90,10 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(width: 1, color: Colors.black)
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedOption,
                 items: items
@@ -111,6 +115,10 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(width: 1, color: Colors.black)
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedstatus,
                 items: status
@@ -123,14 +131,14 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                 onChanged: (item) => setState(() => selectedstatus = item),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _stockNameController,
                 decoration: InputDecoration(
                     labelText: 'Stock Name',
-
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     )
@@ -140,7 +148,10 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _cmpController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'CMP',
                     border: OutlineInputBorder(
@@ -152,7 +163,10 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _targetController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'Target',
                     border: OutlineInputBorder(
@@ -164,7 +178,10 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _slController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'SL',
                     border: OutlineInputBorder(
@@ -176,6 +193,8 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _remarkController,
                 decoration: InputDecoration(
                     labelText: 'Remark',
@@ -188,6 +207,8 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 readOnly: true,
                 onTap: () {
                   _selectDate(context);
@@ -211,92 +232,99 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                 ),
               ),
             ),
-            SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              child: SizedBox(width: double.infinity,
+
+            SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.cyan,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0))),
-    onPressed: () {
-      if (selectedOption == null ||
-          selectedstatus == null ||
-          _stockNameController.text
-              .trim()
-              .isEmpty ||
-          _cmpController.text
-              .trim()
-              .isEmpty ||
-          _targetController.text
-              .trim()
-              .isEmpty ||
-          _slController.text
-              .trim()
-              .isEmpty ||
-          _remarkController.text
-              .trim()
-              .isEmpty ||
-          selectedDate == null) {
-        // Display an error message if any required field is empty
-        Fluttertoast.showToast(
-          msg: 'All fields must be filled',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.cyan,
-          textColor: Colors.white,
-        );
-      } else {
-        // All required fields are filled, proceed with updating Firestore document
-        bool _isSaving = false;
-        setState(() {
-          _isSaving = true;
-        });
-        String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-        // Update Firestore document with new data
-        FirebaseFirestore.instance.collection('Stocks')
-            .doc(widget.documentId)
-            .update({
-          'category': selectedOption,
-          'status': selectedstatus,
-          'stockName': _stockNameController.text.trim(),
-          'cmp': _cmpController.text.trim(),
-          'target': _targetController.text.trim(),
-          'sl': _slController.text.trim(),
-          'remark': _remarkController.text.trim(),
-          'date': formattedDate,
-        }).then((_) {
-          Navigator.pop(context);
-          Fluttertoast.showToast(
-            msg: 'Data Updated Successfully',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.cyan,
-            textColor: Colors.white,
-          );
-          if (selectedOption == 'IntraDay') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Intraday()),
-            );
-          } else if (selectedOption == 'Long Term') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Longterm()),
-            );
-          } // Close the edit screen
-        }).catchError((error) {
-          bool _isSaving = false;
+                  onPressed: () {
+                    if (selectedOption == null ||
+                        selectedstatus == null ||
+                        _stockNameController.text
+                            .trim()
+                            .isEmpty ||
+                        _cmpController.text
+                            .trim()
+                            .isEmpty ||
+                        _targetController.text
+                            .trim()
+                            .isEmpty ||
+                        _slController.text
+                            .trim()
+                            .isEmpty ||
+                        _remarkController.text
+                            .trim()
+                            .isEmpty ||
+                        selectedDate == null) {
+                      // Display an error message if any required field is empty
+                      Fluttertoast.showToast(
+                        msg: 'All fields must be filled',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.cyan,
+                        textColor: Colors.white,
+                      );
+                    } else {
+                      // All required fields are filled, proceed with updating Firestore document
+                      bool _isSaving = false;
+                      setState(() {
+                        _isSaving = true;
+                      });
 
-          // Handle error
-          print("Failed to update document: $error");
-          setState(() {
-            _isSaving = false;
-          });
-        });
-      }
-    },
+                      String formattedDate = selectedDate!.toLocal()
+                          .toString()
+                          .split(' ')[0];
+                      // Update Firestore document with new data
+                      FirebaseFirestore.instance.collection('Stocks')
+                          .doc(widget.documentId)
+                          .update({
+                        'category': selectedOption,
+                        'status': selectedstatus,
+                        'stockName': _stockNameController.text.trim(),
+                        'cmp': _cmpController.text.trim(),
+                        'target': _targetController.text.trim(),
+                        'sl': _slController.text.trim(),
+                        'remark': _remarkController.text.trim(),
+                        'date': formattedDate,
+                      }).then((_) {
+                        Navigator.pop(context);
+                        Fluttertoast.showToast(
+                          msg: 'Data Updated Successfully',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                        if (selectedOption == 'IntraDay') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>
+                                Intraday()),
+                          );
+                        } else if (selectedOption == 'Long Term') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Longterm()),
+                          );
+                        } // Close the edit screen
+                      }).catchError((error) {
+                        bool _isSaving = false;
+
+                        // Handle error
+                        print("Failed to update document: $error");
+                        setState(() {
+                          _isSaving = false;
+                        });
+                      });
+                    }
+                  },
                   child: Text(
                     "Save Changes",
                     style: TextStyle(fontSize: 16, color: Colors.white),

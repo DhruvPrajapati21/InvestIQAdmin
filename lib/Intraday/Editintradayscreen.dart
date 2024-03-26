@@ -53,7 +53,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
           _targetController.text = doc['target'];
           _slController.text = doc['sl'];
           _remarkController.text = doc['remark'];
-          selectedDate = DateTime.parse(doc['date']);
+          selectedDate = doc['date'] != null ? DateTime.parse(doc['date']) : null;
         });
       }
     }).catchError((error) {
@@ -100,8 +100,13 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black)),
+                      borderSide: BorderSide(width: 1, color: Colors.black),
                 ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
+                  ),
                 value: selectedOption,
                 items: items
                     .map((item) => DropdownMenuItem<String>(
@@ -118,7 +123,12 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black)),
+                      borderSide: BorderSide(width: 1, color: Colors.black)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedstatus,
                 items: status
@@ -133,6 +143,8 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _stockNameController,
                 decoration: InputDecoration(
                     labelText: 'Stock Name',
@@ -144,7 +156,10 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _cmpController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'CMP',
                     border: OutlineInputBorder(
@@ -155,7 +170,10 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _targetController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'Target',
                     border: OutlineInputBorder(
@@ -166,7 +184,10 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _slController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'SL',
                     border: OutlineInputBorder(
@@ -177,6 +198,8 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _remarkController,
                 decoration: InputDecoration(
                     labelText: 'Remark',
@@ -188,6 +211,8 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 readOnly: true,
                 onTap: () {
                   _selectDate(context);

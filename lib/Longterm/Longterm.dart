@@ -249,7 +249,7 @@ class Longterm extends StatelessWidget {
                         Text('Target: ${statusModel.target}'),
                         Text('SL: ${statusModel.sl}'),
                         Text('Remark: ${statusModel.remark}'),
-                        Text('Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(statusModel.date.trim()))}'),
+                        Text('Date: ${statusModel.date}'),
                       ],
                     ),
                     trailing: Row(

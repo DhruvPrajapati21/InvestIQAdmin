@@ -205,6 +205,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   controller: stockNameController,
                   decoration: InputDecoration(
                     labelText: 'Stock Name',
@@ -217,6 +219,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   controller: lotController,
                   keyboardType: TextInputType.numberWithOptions(),
                   decoration: InputDecoration(
@@ -230,6 +234,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   controller: priceController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -243,6 +249,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   readOnly: true,
                   onTap: () {
                     _selectDate(context);
@@ -269,6 +277,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   readOnly: true,
                   onTap: () {
                     _selectDate2(context);
@@ -295,6 +305,8 @@ class _AddIPOState extends State<AddIPO> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   controller: remarkController,
                   decoration: InputDecoration(
                     labelText: 'Remark',

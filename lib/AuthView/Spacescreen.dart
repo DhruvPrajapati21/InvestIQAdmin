@@ -1,6 +1,12 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:invest_iq/Admin.dart';
 import 'package:invest_iq/AuthView/Login.dart';
+
+
+
+User? user = FirebaseAuth.instance.currentUser;
 class Spacescreen extends StatefulWidget {
   const Spacescreen({super.key});
 
@@ -13,9 +19,24 @@ class _SpacescreenState extends State<Spacescreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4 ),(){
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
-    });
+    Timer(const Duration(seconds: 5), checkingTheSavedData
+    );
+  }
+
+  void checkingTheSavedData() async {
+
+    // print("user.....${user}");
+    if (user == null) {
+      // print("object........$user");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
+    } else {
+      print("user found");
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Admin()));
+    }
   }
   @override
   Widget build(BuildContext context) {

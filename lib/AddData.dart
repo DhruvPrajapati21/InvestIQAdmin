@@ -161,28 +161,30 @@ class _AddDataState extends State<AddData> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 10),
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: FocusScope(
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(width: 1, color: Colors.black)
+                          borderSide: BorderSide(width: 1, color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
-                      ),
-                    ),
-                    value: selectedOption,
-                    items: items
-                        .map((item) =>
-                        DropdownMenuItem<String>
-                          (value: item,
+                      value: selectedOption,
+                      items: items
+                          .map(
+                            (item) => DropdownMenuItem<String>(
+                          value: item,
                           child: Text(item, style: TextStyle(fontSize: 18)),
-                        ))
-                        .toList(),
-                    onChanged: (item) => setState(() => selectedOption = item),
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (item) => setState(() => selectedOption = item),
+                    ),
                   ),
                 ),
                 Padding(
@@ -212,6 +214,8 @@ class _AddDataState extends State<AddData> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
                     controller: stockNameController,
                     decoration: InputDecoration(
                         labelText: 'Stock',
@@ -224,8 +228,10 @@ class _AddDataState extends State<AddData> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
                     controller: cmpController,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: 'CMP',
                         border: OutlineInputBorder(
@@ -237,8 +243,10 @@ class _AddDataState extends State<AddData> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
                     controller: targetController,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: 'Target',
                         border: OutlineInputBorder(
@@ -250,8 +258,10 @@ class _AddDataState extends State<AddData> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
                     controller: slController,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: 'SL',
                         border: OutlineInputBorder(
@@ -263,6 +273,8 @@ class _AddDataState extends State<AddData> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
                     controller: remarkController,
                     decoration: InputDecoration(
                         labelText: 'Remark',
@@ -275,6 +287,8 @@ class _AddDataState extends State<AddData> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 readOnly: true,
                 onTap: () {
                   _selectDate(context);

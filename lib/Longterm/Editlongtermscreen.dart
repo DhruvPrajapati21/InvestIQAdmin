@@ -21,52 +21,120 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
   List<String> status = ['Status','Active', 'Achieved', 'SL Hit',];
   String? selectedstatus = 'Status';
   DateTime? selectedDate;
+  bool isLoading = false;
   // Define TextEditingController for each field
+  final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _stockNameController = TextEditingController();
   final TextEditingController _cmpController = TextEditingController();
   final TextEditingController _targetController = TextEditingController();
   final TextEditingController _slController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
 
   @override
   void initState() {
     super.initState();
-    // Fetch existing data from Firestore and populate the fields
-    FirebaseFirestore.instance.collection('Stocks').doc(widget.documentId).get().then((doc) {
-      if (doc.exists) {
-        setState(() {
-          selectedOption = doc['category'];
-          selectedstatus = doc['status'];
-          _stockNameController.text = doc['stockName'];
-          _cmpController.text = doc['cmp'];
-          _targetController.text = doc['target'];
-          _slController.text = doc['sl'];
-          _remarkController.text = doc['remark'];
-          selectedDate = DateTime.parse(doc['date']);
-        });
-      }
-    }).catchError((error) {
-      print("Failed to fetch document: $error");
-    });
+    _fetchData();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+
+
+  Future<void> _fetchData() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      DocumentSnapshot doc =
+      await FirebaseFirestore.instance.collection('Stocks').doc(widget.documentId).get();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      _categoryController.text = data['category'];
+      _statusController.text = data['status'];
+      _stockNameController.text = data['stockName'];
+      _cmpController.text = data['cmp'];
+      _targetController.text = data['target'];
+      _slController.text = data['sl'];
+      _remarkController.text = data['remark'];
+
+      // Handle the 'date' field correctly
+      if (data['date'] is String) {
+        // If it's a String, parse it as a DateTime
+        selectedDate = DateTime.parse(data['date']);
+        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      } else if (data['date'] is Timestamp) {
+        // If it's a Timestamp, convert it to a DateTime
+        Timestamp timestamp = data['date'] as Timestamp;
+        selectedDate = timestamp.toDate();
+        _dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      }
+
+      setState(() {
+        isLoading = false;
+      }); // Update the state to reflect changes
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> updateData() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      await FirebaseFirestore.instance.collection('Stocks').doc(widget.documentId).update({
+
+        'category': _categoryController.text,
+        'status': _statusController.text,
+        'stockName': _stockNameController.text,
+        'cmp': _cmpController.text,
+        'target': _targetController.text,
+        'sl': _slController.text,
+        'remark': _remarkController.text,
+        'date': selectedDate,
+      });
+
+      // Fetch updated data after the update is successful
+      await _fetchData();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Data updated successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      Navigator.pop(context); // Go back to the previous screen after updating
+    } catch (e) {
+      print('Error updating data: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
-    if (pickedDate != null && pickedDate != selectedDate) {
+    if (picked != null && picked != selectedDate) {
       setState(() {
-        selectedDate = pickedDate;
+        selectedDate = picked;
+        _dateController.text = DateFormat('yyyy-MM-dd').format(selectedDate!);
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +158,10 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(width: 1, color: Colors.black)
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedOption,
                 items: items
@@ -111,6 +183,10 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(width: 1, color: Colors.black)
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedstatus,
                 items: status
@@ -126,6 +202,8 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _stockNameController,
                 decoration: InputDecoration(
                     labelText: 'Stock Name',
@@ -138,7 +216,10 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _cmpController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'CMP',
                     border: OutlineInputBorder(
@@ -150,7 +231,10 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _targetController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'Target',
                     border: OutlineInputBorder(
@@ -162,7 +246,10 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _slController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: 'SL',
                     border: OutlineInputBorder(
@@ -174,6 +261,8 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: _remarkController,
                 decoration: InputDecoration(
                     labelText: 'Remark',
@@ -186,29 +275,21 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                readOnly: true,
-                onTap: () {
-                  _selectDate(context);
-                },
-                controller: TextEditingController(
-                  text: selectedDate == null
-                      ? ''
-                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
-                ),
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                controller: _dateController,
                 decoration: InputDecoration(
-                  labelText: "Select Date",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                    icon: Icon(Icons.calendar_today),
-                  ),
+                  labelText: 'Selected Date',
+                  suffixIcon: const Icon(Icons.calendar_today),
                 ),
+                onTap: () => selectDate(context),
+                readOnly: true,
               ),
             ),
+
             SizedBox(height: 20),
 
             SizedBox(

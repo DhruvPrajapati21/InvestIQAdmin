@@ -99,6 +99,10 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(width: 1, color: Colors.black),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                  ),
                 ),
                 value: selectedIPO,
                 items: ipo.map((item) => DropdownMenuItem<String>(
@@ -111,6 +115,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: stockNameController,
                 decoration: InputDecoration(
                   labelText: 'Stock Name',
@@ -123,6 +129,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: lotController,
                 keyboardType: TextInputType.numberWithOptions(),
                 decoration: InputDecoration(
@@ -136,6 +144,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: priceController,
                 keyboardType: TextInputType.numberWithOptions(),
                 decoration: InputDecoration(
@@ -149,6 +159,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 readOnly: true,
                 onTap: () {
                   _selectDate(context);
@@ -175,6 +187,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 readOnly: true,
                 onTap: () {
                   _selectDate2(context);
@@ -201,6 +215,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
                 controller: remarkController,
                 decoration: InputDecoration(
                   labelText: 'Remark',
