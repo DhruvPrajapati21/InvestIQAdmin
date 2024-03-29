@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/All Users/AllUsersModel.dart';
 import 'package:invest_iq/AuthView/Spacescreen.dart';
 
@@ -63,8 +64,17 @@ class _AllusersState extends State<Allusers> {
                   color: Colors.white60,
                   margin: EdgeInsets.all(11.0),
                   child: ListTile(
-                    leading: CircleAvatar( backgroundColor: Colors.cyan,radius: 15,
-                      child: Text((index + 1).toString(),style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),), // Displaying the index number
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.cyan,
+                      radius: 15,
+                      child: Text(
+                        (index + 1).toString(),
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -82,6 +92,51 @@ class _AllusersState extends State<Allusers> {
                           ),
                         ],
                       ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Confirm Delete"),
+                                  content: Text(
+                                      "Are you sure you want to delete this item?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('User')
+                                            .doc(snapshot.data!.docs[index].id)
+                                            .delete();
+                                        Navigator.of(context).pop();
+                                        Fluttertoast.showToast(
+                                          msg: "Item Deleted Successfully",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.cyan,
+                                          textColor: Colors.white,
+                                        );
+                                      },
+                                      child: Text("Delete"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
