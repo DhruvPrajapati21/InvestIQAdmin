@@ -128,9 +128,9 @@ class _AdminState extends State<Admin> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      "Settings",
+                      "Profile",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 25,
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.bold,

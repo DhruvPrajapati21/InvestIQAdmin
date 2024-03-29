@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
-
       home: Spacescreen(),
     );
   }
