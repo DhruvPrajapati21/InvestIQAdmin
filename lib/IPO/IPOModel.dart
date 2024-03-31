@@ -11,7 +11,6 @@ class IPOModel {
   final String closedate;
   final String remark;
 
-
   IPOModel(
       {required this.status,required this.stockName ,required this.lot,required this.price,required this.opendate,required this.closedate,required this.remark,});
 
@@ -24,10 +23,7 @@ class IPOModel {
       price: snapshot['price'],
       opendate: snapshot['opendate'],
       closedate: snapshot['closedate'],
-      remark: snapshot['remark'],
-
-
-
+      remark: snapshot['remark']
     );
   }
 }

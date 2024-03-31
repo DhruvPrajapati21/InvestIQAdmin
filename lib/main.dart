@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Invest-IQ',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       home: Spacescreen(),
