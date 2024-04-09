@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invest_iq/Admin.dart';
 import 'package:invest_iq/AuthView/Signup.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _LoginState extends State<Login> {
           key: Form_key,
           child: Column(
             children: [
-              Image.asset("assets/images/Logo.png"),
+              Image.asset("assets/images/Logo_Tranferent1.png"),
               Image.asset(
                 "assets/images/g1.png",
                 width: 110,
@@ -99,59 +100,92 @@ class _LoginState extends State<Login> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () async {
-                        if (Form_key.currentState!.validate()) {
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                              email: name1Controller.text.trim(),
-                              password: name2Controller.text.trim(),
-                            );
-                            Fluttertoast.showToast(
+                    onPressed: () async {
+                      if (Form_key.currentState!.validate()) {
+                        try {
+                          final userSnapshot = await FirebaseFirestore.instance
+                              .collection('Admin')
+                              .where('Email', isEqualTo: name1Controller.text)
+                              .limit(1)
+                              .get();
+
+                          if (userSnapshot.docs.isNotEmpty) {
+                            final userData = userSnapshot.docs.first.data();
+                            final savedPassword = userData['Password'];
+                            if (savedPassword == name2Controller.text) {
+                              // Password matches, proceed with login
+                              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                email: name1Controller.text,
+                                password: name2Controller.text,
+                              );
+                              Fluttertoast.showToast(
                                 msg: "Successfully Logged In!",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
-                                fontSize: 11.0);
-                            Navigator.pushReplacement(
+                                fontSize: 11.0,
+                              );
+                              Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => Admin()));
-                          } on FirebaseAuthException catch (e) {
-                            String errorMessage =
-                                'Incorrect Username and Password! please try again later.';
-                            if (e.code == 'user-not-found') {
-                              errorMessage = 'No user found with this email.';
-                            } else if (e.code == 'wrong-password') {
-                              errorMessage = 'Incorrect password.';
-                            }
-                            Fluttertoast.showToast(
-                              msg: errorMessage,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
+                                MaterialPageRoute(builder: (context) => Admin()),
+                              );
+                            } else {
+                              // Password doesn't match
+                              print('Incorrect Password');
+                              Fluttertoast.showToast(
+                                msg: 'Incorrect password',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
                                 fontSize: 11.0,
+                              );
+                            }
+                          } else {
+                            // User not found
+                            print('User not found');
+                            Fluttertoast.showToast(
+                              msg: 'User not found',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 11.0,
                             );
                           }
+                        } catch (e) {
+                          print('Error: $e');
+                          // Handle any potential errors here
+                          Fluttertoast.showToast(
+                            msg: 'An error occurred',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 11.0,
+                          );
                         }
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.cyan,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0))),
-                      child: Text(
-                        "Login",
-                        style: TextStyle(fontSize: 18),
-                      )),
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyan,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0))),
+                    child: Text(
+                      "Login",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
                 ),
               ),
               Row(

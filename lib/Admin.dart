@@ -11,6 +11,9 @@ import 'package:invest_iq/All Users/Allusers.dart';
 import 'package:invest_iq/IPO/AddIPO.dart';
 import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+import 'Provider.dart';
 
 class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
@@ -25,7 +28,7 @@ class _AdminState extends State<Admin> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Are you sure?'),
-        content: const Text('Do you want to exit the app?'),
+        content: const Text('Do you want to exit Invest-IQ?',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,fontStyle: FontStyle.italic),),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -46,8 +49,8 @@ class _AdminState extends State<Admin> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Logout"),
-          content: Text("Are you sure you want to logout?"),
+          title: const Text("Logout Invest-IQ?",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),),
+          content: const Text("Are you sure you want to logout?"),
           actions: <Widget>[
             TextButton(
               child: Text("No"),
@@ -113,6 +116,7 @@ class _AdminState extends State<Admin> {
           centerTitle: true,
         ),
         drawer: Drawer(
+          width: 220,
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -146,6 +150,7 @@ class _AdminState extends State<Admin> {
                   Navigator.pop(context);
                 },
               ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_box),
                 title: const Text("Add Data"),
@@ -154,6 +159,7 @@ class _AdminState extends State<Admin> {
                       context, MaterialPageRoute(builder: (context) => AddData()));
                 },
               ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_chart),
                 title: const Text("Add IPO"),
@@ -162,19 +168,30 @@ class _AdminState extends State<Admin> {
                       context, MaterialPageRoute(builder: (context) => AddIPO()));
                 },
               ),
+              const Divider(thickness: 2,),
               ListTile(
-                leading: const Icon(Icons.brightness_2_rounded),
+                leading: const Icon(Icons.announcement),
                 title: const Text("Add Guidelines"),
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AddGuidelines()));
                 },
               ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.notification_add),
                 title: const Text("Notifications"),
                 onTap: () {},
               ),
+              const Divider(thickness: 2,),
+              ListTile(
+                leading: const Icon(Icons.sunny_snowing,size: 25,),
+                title: const Text("Theme"),
+                onTap: () {
+                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                },
+              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),
                 title: const Text("Logout"),
@@ -182,6 +199,7 @@ class _AdminState extends State<Admin> {
                   showLogoutConfirmationDialog(context);
                 },
               ),
+              const Divider(thickness: 2,),
             ],
           ),
         ),
@@ -196,7 +214,6 @@ class _AdminState extends State<Admin> {
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
                 fontSize: 20,
               ),
             ),

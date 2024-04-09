@@ -86,10 +86,6 @@ class _AllusersState extends State<Allusers> {
                           ),
                           SizedBox(height: 10),
                           Text('Email: ${AllUsersModel.Email}'),
-                          SizedBox(height: 10),
-                          Text(
-                            'Password: ${AllUsersModel.Password}',
-                          ),
                         ],
                       ),
                     ),

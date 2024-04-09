@@ -145,6 +145,7 @@ import 'package:invest_iq/StatusModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:intl/intl.dart';
+import 'package:invest_iq/Shortterm/Editshorttermscreen.dart';
 
 class Shortterm extends StatelessWidget {
   @override
@@ -266,7 +267,7 @@ class Shortterm extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Editshortermscreen(
+                                builder: (context) => EditShortTermScreen(
                                   documentId:snapshot.data!.docs [index].id,
                                 ),
                               ),

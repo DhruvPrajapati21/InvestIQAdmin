@@ -41,7 +41,6 @@ class _SpacescreenState extends State<Spacescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
      body:
        Center(
          child: Padding(
@@ -49,8 +48,7 @@ class _SpacescreenState extends State<Spacescreen> {
            child: Column(
              mainAxisAlignment: MainAxisAlignment.center,
              children: [
-               Image.asset("assets/images/Logo.png"),
-               Image.asset("assets/images/m1.png",height: 20,width: 20,),
+               Image.asset("assets/images/Logo_Tranferent1.png"),
 
                SizedBox(width: 20,height: 20,),
                Row(
@@ -58,7 +56,7 @@ class _SpacescreenState extends State<Spacescreen> {
                      children: [
                    TextButton(onPressed: (){
 
-                   }, child: Text("Welcome!",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 26,color: Colors.cyan),)),
+                   }, child: Text("Welcome To Invest-IQ!",style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,fontSize: 26,color: Colors.cyan),)),
                        SizedBox(width: 10,height: 10,),
                          ],
                        ),

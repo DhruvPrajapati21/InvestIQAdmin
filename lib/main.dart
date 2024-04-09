@@ -1,13 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_iq/AuthView/Spacescreen.dart';
+import 'package:provider/provider.dart';
 import 'AuthView/Login.dart';
 import 'Admin.dart';
+import 'Provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(const MyApp());
+  await Firebase.initializeApp();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Invest-IQ',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
+      theme: Provider.of<ThemeProvider>(context).currentTheme,
       home: Spacescreen(),
     );
   }
