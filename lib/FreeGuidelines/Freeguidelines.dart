@@ -4,6 +4,7 @@ import 'package:invest_iq/FreeGuidelines/Editfreeguidelinesscreen.dart';
 import 'package:invest_iq/FreeGuidelines/GuidelinesModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Admin.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Freeguidelines extends StatefulWidget {
   const Freeguidelines({super.key});
@@ -27,6 +28,18 @@ class _FreeguidelinesState extends State<Freeguidelines> {
           ),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Guidelines').snapshots(), // Fetch only 'IntraDay' category.snapshots(),
@@ -74,9 +87,14 @@ class _FreeguidelinesState extends State<Freeguidelines> {
                           SizedBox(height: 30),
                           Text('${GuidelinesModel.guidelines}'),
                           SizedBox(height: 30),
-                          Text(
-                            '${GuidelinesModel.contactus}',
-                            style: TextStyle(color: Colors.blue),
+                          TextButton(
+                            onPressed: () {
+                              _launchEmail('${GuidelinesModel.contactus}');
+                            },
+                            child: Text(
+                              '${GuidelinesModel.contactus}',
+                              style: TextStyle(color: Colors.blue),
+                            ),
                           ),
                         ],
                       ),
@@ -107,5 +125,20 @@ class _FreeguidelinesState extends State<Freeguidelines> {
         },
       ),
     );
+  }
+}
+_launchEmail(String emailAddress) async {
+  final Uri _emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: emailAddress,
+    queryParameters: {
+      'subject': 'Your subject here',
+      'body': 'Your message here',
+    },
+  );
+  if (await canLaunch(_emailLaunchUri.toString())) {
+    await launch(_emailLaunchUri.toString());
+  } else {
+    throw 'Could not launch $_emailLaunchUri';
   }
 }

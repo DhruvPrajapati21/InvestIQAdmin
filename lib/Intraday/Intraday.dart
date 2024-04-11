@@ -142,6 +142,7 @@ import 'package:invest_iq/StatusModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Intraday/Editintradayscreen.dart';
 import 'package:intl/intl.dart';
+import 'package:invest_iq/Admin.dart';
 
 class Intraday extends StatelessWidget {
   @override
@@ -152,6 +153,18 @@ class Intraday extends StatelessWidget {
         title: Text('IntraDay Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Stocks')

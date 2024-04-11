@@ -5,6 +5,7 @@ import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_iq/StatusModel.dart';
+import 'package:invest_iq/Admin.dart';
 class Editlongtermscreen extends StatefulWidget {
   final String documentId;
 
@@ -144,6 +145,18 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
         title: Text("Edit LongTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

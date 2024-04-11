@@ -117,6 +117,7 @@ class _SignupState extends State<Signup> {
               color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Form(
