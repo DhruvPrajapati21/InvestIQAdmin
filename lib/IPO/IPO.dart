@@ -13,7 +13,7 @@ class IPO extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.cyan,
         title: Text(
-          'IPO Data',
+          'IPO Dat',
           style: TextStyle(
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.bold,

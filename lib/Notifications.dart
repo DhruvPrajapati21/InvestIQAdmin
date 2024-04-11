@@ -14,7 +14,7 @@ class _NotificationsState extends State<Notifications> {
         appBar: AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
-            "Manag Notifications",
+            "Manage Notifications",
             style: TextStyle(
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.bold,
