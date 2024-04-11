@@ -146,6 +146,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_iq/Shortterm/Editshorttermscreen.dart';
+import 'package:invest_iq/Admin.dart';
 
 class Shortterm extends StatelessWidget {
   @override
@@ -156,6 +157,18 @@ class Shortterm extends StatelessWidget {
         title: Text('ShortTerm Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Stocks')

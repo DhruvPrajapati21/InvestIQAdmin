@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/IPO/IPOModel.dart';
 import 'package:invest_iq/IPO/IPO.dart';
+import 'package:invest_iq/Admin.dart';
 
 class EditIPOScreen extends StatefulWidget {
   final String documentId;
@@ -86,6 +87,18 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:invest_iq/Admin.dart';
 class AddData extends StatefulWidget {
   const AddData({super.key});
 
@@ -155,6 +156,18 @@ class _AddDataState extends State<AddData> {
                 color: Colors.white),
             ),
             centerTitle: true,
+            iconTheme: IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.home, size: 25, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Admin()),
+                  );
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
           child:Center(

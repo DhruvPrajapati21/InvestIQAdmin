@@ -5,6 +5,7 @@ import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/Longterm/Longterm.dart';
 import 'package:invest_iq/StatusModel.dart';
 import 'package:intl/intl.dart';
+import 'package:invest_iq/Admin.dart';
 class Editintradayscreen extends StatefulWidget {
   final String documentId;
 
@@ -89,6 +90,18 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
               color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

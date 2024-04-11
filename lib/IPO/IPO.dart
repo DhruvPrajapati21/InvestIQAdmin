@@ -12,13 +12,29 @@ class IPO extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text('IPO Data',style: TextStyle(fontStyle: FontStyle.italic,fontWeight: FontWeight.bold,color: Colors.white),
+        title: Text(
+          'IPO Data',
+          style: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.home, size: 25, color: Colors.white),
+        //     onPressed: () {
+        //       Navigator.pushReplacement(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => Admin()),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('IPO')
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('IPO').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -29,7 +45,9 @@ class IPO extends StatelessWidget {
           if (snapshot.data!.docs.isEmpty) {
             return Center(child: Text('No data available'));
           }
-          List<IPOModel> IPO = snapshot.data!.docs.map((doc) => IPOModel.fromSnapshot(doc)).toList();
+          List<IPOModel> IPO = snapshot.data!.docs
+              .map((doc) => IPOModel.fromSnapshot(doc))
+              .toList();
 
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
@@ -57,7 +75,10 @@ class IPO extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.delete,color: Colors.red,),
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -97,13 +118,16 @@ class IPO extends StatelessWidget {
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.edit,color: Colors.teal,),
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.teal,
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditIPOScreen(
-                                  documentId:snapshot.data!.docs[index].id,
+                                  documentId: snapshot.data!.docs[index].id,
                                 ),
                               ),
                             );

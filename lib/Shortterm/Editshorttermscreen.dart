@@ -345,6 +345,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
+import 'package:invest_iq/Admin.dart';
 
 class EditShortTermScreen extends StatefulWidget {
   final String documentId;
@@ -503,11 +504,23 @@ class _EditShortTermScreenState extends State<EditShortTermScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
+        title: Text(
           'Edit ShortTerm',
           style: TextStyle(
               fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

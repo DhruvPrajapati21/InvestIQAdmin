@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/All Users/AllUsersModel.dart';
 import 'package:invest_iq/AuthView/Spacescreen.dart';
+import 'package:invest_iq/Admin.dart';
 
 class Allusers extends StatefulWidget {
   const Allusers({super.key});
@@ -25,6 +26,18 @@ class _AllusersState extends State<Allusers> {
               color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance

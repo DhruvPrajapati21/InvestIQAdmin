@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/FreeGuidelines/GuidelinesModel.dart';
 import 'package:intl/intl.dart';
+import 'package:invest_iq/Admin.dart';
 class Editfreeguidelinesscreen extends StatefulWidget {
   final String documentId;
 
@@ -54,6 +55,18 @@ class _EditfreeguidelinesscreenState extends State<Editfreeguidelinesscreen> {
               color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
