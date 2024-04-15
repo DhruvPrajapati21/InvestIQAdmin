@@ -35,18 +35,27 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
   final TextEditingController _targetController = TextEditingController();
   final TextEditingController _slController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+
+  bool isLoading = false; // Added loading indicator state
 
   @override
   void initState() {
     super.initState();
-    // Fetch existing data from Firestore and populate the fields
-    FirebaseFirestore.instance
-        .collection('Stocks')
-        .doc(widget.documentId)
-        .get()
-        .then((doc) {
-      if (doc.exists) {
-        setState(() {
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('Stocks')
+          .doc(widget.documentId)
+          .get();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           selectedOption = doc['category'];
           selectedstatus = doc['status'];
           _stockNameController.text = doc['stockName'];
@@ -54,16 +63,31 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
           _targetController.text = doc['target'];
           _slController.text = doc['sl'];
           _remarkController.text = doc['remark'];
-          selectedDate = doc['date'] != null ? DateTime.parse(doc['date']) : null;
-        });
+      // Handle the 'date' field correctly
+      if (data['date'] is String) {
+        // If it's a String, parse it as a DateTime
+        selectedDate = DateTime.parse(data['date']);
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      } else if (data['date'] is Timestamp) {
+        // If it's a Timestamp, convert it to a DateTime
+        Timestamp timestamp = data['date'] as Timestamp;
+        selectedDate = timestamp.toDate();
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       }
-    }).catchError((error) {
-      print("Failed to fetch document: $error");
-    });
+
+      setState(() {
+        isLoading = false;
+      }); // Update the state to reflect changes
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -73,9 +97,15 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        // Update the text in the dateController to reflect the new selected date
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       });
     }
   }
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -249,6 +279,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                 ),
               ),
             ),
+
             SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
@@ -281,8 +312,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                       // All required fields are filled, proceed with updating Firestore document
                       setState(() {
                       });
-                      String formattedDate =
-                          selectedDate!.toLocal().toString().split(' ')[0];
+                      String formattedDate = _formatDate(selectedDate!);
                       // Update Firestore document with new data
                       FirebaseFirestore.instance
                           .collection('Stocks')
