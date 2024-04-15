@@ -21,17 +21,17 @@ class IPO extends StatelessWidget {
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.home, size: 25, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.pushReplacement(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => Admin()),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('IPO').snapshots(),

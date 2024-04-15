@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invest_iq/Admin.dart';
+import 'package:image_picker/image_picker.dart';
+
 class AddData extends StatefulWidget {
   const AddData({super.key});
 
@@ -19,6 +21,8 @@ class _AddDataState extends State<AddData> {
   List<String> items1 = ['Status','Active', 'Achieved', 'SL Hit',];
   String? selectedStatus = 'Status';
   DateTime? selectedDate;
+  String imageUrl = '';
+  File? selectedImage;
   bool isLoading = false;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController stockNameController = TextEditingController();
@@ -52,59 +56,55 @@ class _AddDataState extends State<AddData> {
       setState(() {
         isLoading = true;
       });
-
       try {
-        // Check if the stock name is already present in the selected category
-        QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-            .collection('Stocks')
-            .where('category', isEqualTo: selectedOption)
-            .where('stockName', isEqualTo: stockNameController.text.trim())
-            .get();
+        // Upload the image to Firebase Storage first
+        String imagePath = '';
+        if (selectedImage != null) {
+          // Create a reference to the location you want to upload to in Firebase Storage
+          Reference ref = FirebaseStorage.instance.ref().child('images').child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
-        if (querySnapshot.docs.isNotEmpty) {
-          // Stock name already exists in the selected category, show a Snackbar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Stock name already exists in the selected category.'),
-              duration: Duration(seconds: 3),
-            ),
-          );
-        } else {
-          // Format the selected date
-          String formattedDate = _formatDate(selectedDate!);
+          // Upload the file to Firebase Storage
+          UploadTask uploadTask = ref.putFile(selectedImage!);
 
-          // Stock name is unique in the selected category, proceed to add data
-          await _firestore.collection('Stocks').add({
-            'category': selectedOption,
-            'status': selectedStatus,
-            'stockName': stockNameController.text.trim(),
-            'cmp': cmpController.text.trim(),
-            'target': targetController.text.trim(),
-            'sl': slController.text.trim(),
-            'remark': remarkController.text.trim(),
-            'date': formattedDate, // Store date as string
-          });
-
-          // Reset values after successful data addition
-          setState(() {
-            selectedOption = null;
-            selectedStatus = null;
-            selectedDate = null;
-            stockNameController.clear();
-            cmpController.clear();
-            targetController.clear();
-            slController.clear();
-            remarkController.clear();
-          });
-
-          // Show success message in Snackbar
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Data added to Firestore successfully!'),
-              duration: Duration(seconds: 3),
-            ),
-          );
+          // Get the download URL of the uploaded file
+          TaskSnapshot snapshot = await uploadTask;
+          imagePath = await snapshot.ref.getDownloadURL();
         }
+
+        // Proceed to add other data to Firestore
+        String formattedDate = _formatDate(selectedDate!);
+        await _firestore.collection('Stocks').add({
+          'category': selectedOption,
+          'status': selectedStatus,
+          'stockName': stockNameController.text.trim(),
+          'cmp': cmpController.text.trim(),
+          'target': targetController.text.trim(),
+          'sl': slController.text.trim(),
+          'remark': remarkController.text.trim(),
+          'date': formattedDate,
+          'imageUrl': imagePath, // Add the image URL to Firestore
+        });
+
+        // Reset values after successful data addition
+        setState(() {
+          selectedOption = null;
+          selectedStatus = null;
+          selectedDate = null;
+          selectedImage = null;
+          stockNameController.clear();
+          cmpController.clear();
+          targetController.clear();
+          slController.clear();
+          remarkController.clear();
+        });
+
+        // Show success message in Snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Data added to Firestore successfully!'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       } catch (e) {
         // Handle errors
         print('Error adding data to Firestore: $e');
@@ -133,8 +133,11 @@ class _AddDataState extends State<AddData> {
   }
 
 
+
   bool _validateFields() {
-    return selectedOption != null &&
+    return
+        selectedDate != null   &&
+        selectedOption != null &&
         selectedStatus != null &&
         stockNameController.text.trim().isNotEmpty &&
         cmpController.text.trim().isNotEmpty &&
@@ -171,11 +174,58 @@ class _AddDataState extends State<AddData> {
           ),
           body: SingleChildScrollView(
           child:Center(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: FocusScope(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(
+                children: <Widget>[
+                  selectedImage != null
+                      ? Image.file(selectedImage!, width: 200, height: 200)
+                      : Image.asset("assets/images/na.png", width: 100, height: 100),
+                  // const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          ImagePicker imagePicker = ImagePicker();
+                          XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+                          if (file == null) return;
+                          selectedImage = File(file.path);
+                          setState(() {});
+                        },style: ElevatedButton.styleFrom(backgroundColor:Colors.cyan,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))),
+                        child: const Text("Select Image",style: TextStyle(color: Colors.white),),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: FocusScope(
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(width: 1,), // Set the same color as enabled border
+                          ),
+                        ),
+                        value: selectedOption,
+                        items: items
+                            .map(
+                              (item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item, style: TextStyle(fontSize: 18)),
+                          ),
+                        )
+                            .toList(),
+                        onChanged: (item) => setState(() => selectedOption = item),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -183,170 +233,144 @@ class _AddDataState extends State<AddData> {
                           borderSide: BorderSide(width: 1, color: Colors.black),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                          borderRadius: BorderRadius.circular(12), // Set the same color as enabled border
                         ),
                       ),
-                      value: selectedOption,
-                      items: items
-                          .map(
-                            (item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item, style: TextStyle(fontSize: 18)),
-                        ),
-                      )
-                          .toList(),
-                      onChanged: (item) => setState(() => selectedOption = item),
+                      value: selectedStatus,
+                      items: items1.map((item1) =>
+                          DropdownMenuItem<String>(
+                            value: item1,
+                            child: Text(item1, style: TextStyle(fontSize: 18)),
+                          )
+                      ).toList(),
+                      onChanged: (item1) => setState(() => selectedStatus = item1),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width: 1, color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
-                      ),
-                    ),
-                    value: selectedStatus,
-                    items: items1.map((item1) =>
-                        DropdownMenuItem<String>(
-                          value: item1,
-                          child: Text(item1, style: TextStyle(fontSize: 18)),
-                        )
-                    ).toList(),
-                    onChanged: (item1) => setState(() => selectedStatus = item1),
-                  ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                    controller: stockNameController,
-                    decoration: InputDecoration(
-                        labelText: 'Stock',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                      controller: stockNameController,
+                      decoration: InputDecoration(
+                          labelText: 'Stock',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                    controller: cmpController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: 'CMP',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                      controller: cmpController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: 'CMP',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                    controller: targetController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: 'Target',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                      controller: targetController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: 'Target',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                    controller: slController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: 'SL',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                      controller: slController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: 'SL',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                    controller: remarkController,
-                    decoration: InputDecoration(
-                        labelText: 'Remark',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                      controller: remarkController,
+                      decoration: InputDecoration(
+                          labelText: 'Remark',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                      ),
                     ),
                   ),
-                ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                readOnly: true,
-                onTap: () {
-                  _selectDate(context);
-                },
-                controller: TextEditingController(
-                  text: selectedDate == null
-                      ? ''
-                      : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
-                ),
-                decoration: InputDecoration(
-                  labelText: "Select Date",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                  readOnly: true,
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  controller: TextEditingController(
+                    text: selectedDate == null
+                        ? ''
+                        : 'Selected Date: ${DateFormat('dd/MM/yyyy').format(selectedDate!)}',
                   ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                    icon: Icon(Icons.calendar_today),
+                  decoration: InputDecoration(
+                    labelText: "Select Date",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _selectDate(context);
+                      },
+                      icon: Icon(Icons.calendar_today),
+                    ),
                   ),
                 ),
               ),
-            ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
-                    child: ElevatedButton(onPressed: () async  {
-                      _addToFirestore();
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.cyan,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0))),
-                      child: isLoading
-                          ? const CircularProgressIndicator(color: Colors.white,) // Show the progress indicator
-                          : const Text(
-                        "Submit",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                      child: ElevatedButton(onPressed: () async  {
+                        _addToFirestore();
+                      },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.cyan,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0))),
+                        child: isLoading
+                            ? const CircularProgressIndicator(color: Colors.white,) // Show the progress indicator
+                            : const Text(
+                          "Submit",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
 
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
