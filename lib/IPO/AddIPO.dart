@@ -372,7 +372,18 @@ class _AddIPOState extends State<AddIPO> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        _addToFirestore();
+                        if (selectedImage == null) {
+                          // If no image is selected, show a message
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please select an image.'),
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
+                        } else {
+                          // If an image is selected, proceed to add data
+                          _addToFirestore();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.cyan,

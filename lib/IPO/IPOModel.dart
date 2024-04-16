@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IPOModel {
-  // Add the id field
+  final String documentId; // Add documentId property
+
+  // Other properties
   final String status;
   final String stockName;
   final String lot;
@@ -11,19 +12,38 @@ class IPOModel {
   final String closedate;
   final String remark;
 
-  IPOModel(
-      {required this.status,required this.stockName ,required this.lot,required this.price,required this.opendate,required this.closedate,required this.remark,});
+  IPOModel({
+    required this.documentId, // Include documentId in the constructor
+    required this.status,
+    required this.stockName,
+    required this.lot,
+    required this.price,
+    required this.opendate,
+    required this.closedate,
+    required this.remark,
+  });
 
-  factory IPOModel.fromSnapshot(DocumentSnapshot snapshot) {
+  factory IPOModel.fromSnapshot(DocumentSnapshot doc) {
+    // Extract document ID from the document snapshot
+    String documentId = doc.id;
+    // Extract other fields from the document snapshot
+    String status = doc['status'];
+    String stockName = doc['stockName'];
+    String lot = doc['lot'];
+    String price = doc['price'];
+    String opendate = doc['opendate'];
+    String closedate = doc['closedate'];
+    String remark = doc['remark'];
+
     return IPOModel(
-      // Assign the document ID to the id field
-      status: snapshot['status'],
-      stockName: snapshot['stockName'],
-      lot: snapshot['lot'],
-      price: snapshot['price'],
-      opendate: snapshot['opendate'],
-      closedate: snapshot['closedate'],
-      remark: snapshot['remark']
+      documentId: documentId, // Pass documentId to the constructor
+      status: status,
+      stockName: stockName,
+      lot: lot,
+      price: price,
+      opendate: opendate,
+      closedate: closedate,
+      remark: remark,
     );
   }
 }
