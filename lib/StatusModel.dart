@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class StatusModel {
+  final String documentId;
   final String category; // Add the id field
   final String status;
   final String stockName;
@@ -11,22 +12,30 @@ class StatusModel {
   final String date;
 
 
-
   StatusModel(
-      {required this.category,required this.status ,required this.stockName,required this.cmp,required this.target,required this.sl,required this.remark,required this.date,});
+      {required this.documentId,required this.category,required this.status ,required this.stockName,required this.cmp,required this.target,required this.sl,required this.remark,required this.date,});
 
-  factory StatusModel.fromSnapshot(DocumentSnapshot snapshot) {
+  factory StatusModel.fromSnapshot(DocumentSnapshot doc) {
+    String documentId = doc.id;
+    String category = doc['category'];
+    String status = doc['status'];
+    String stockName = doc['stockName'];
+    String cmp = doc['cmp'];
+    String target = doc['target'];
+    String sl = doc['sl'];
+    String remark = doc['remark'];
+    String date = doc['date'];
+
     return StatusModel(
-      category: snapshot['category'],// Assign the document ID to the id field
-      status: snapshot['status'],
-      stockName: snapshot['stockName'],
-      cmp: snapshot['cmp'],
-      target: snapshot['target'],
-      sl: snapshot['sl'],
-      remark: snapshot['remark'],
-      date: snapshot['date'],
-
-
+      documentId: documentId,
+      category: category,// Assign the document ID to the id field
+      status: status,
+      stockName: stockName,
+      cmp: cmp,
+      target: target,
+      sl: sl,
+      remark: remark,
+      date: date,
 
     );
   }

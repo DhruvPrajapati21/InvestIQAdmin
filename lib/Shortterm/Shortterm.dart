@@ -149,6 +149,18 @@ import 'package:invest_iq/Shortterm/Editshorttermscreen.dart';
 import 'package:invest_iq/Admin.dart';
 
 class Shortterm extends StatelessWidget {
+  Future<String?> getImageUrlFromFirebase(String documentId) async {
+    try {
+      // Fetch the document snapshot using the document ID
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Stocks').doc(documentId).get();
+      // Extract the image URL from the document snapshot
+      return documentSnapshot.get('imageUrl');
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,6 +241,50 @@ class Shortterm extends StatelessWidget {
                         Text('SL: ${statusModel.sl}'),
                         Text('Remark: ${statusModel.remark}'),
                         Text('Date: ${statusModel.date}'),
+                        Card(
+                          surfaceTintColor: Colors.cyan,
+                          elevation: 8.0,
+                          shadowColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(color: Colors.black, width: 1.0),
+                          ),
+                          margin: EdgeInsets.all(10.0),
+                          child: FutureBuilder<String?>(
+                            future: getImageUrlFromFirebase(snapshot.data!.docs[index].id), // Pass the document ID
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // Show a loading indicator while fetching the image URL
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                String imageUrl = snapshot.data ?? ''; // Use default value if imageUrl is null
+                                if (imageUrl.isEmpty) {
+                                  return Text('No image URL available');
+                                }
+                                return Container(
+                                  height: 120,
+                                  width: 120,
+                                  child: Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return CircularProgressIndicator(value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                            : null);
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) => Text('Error loading image: $error'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+
+                        ),
                       ],
                     ),
                     trailing: Row(
@@ -276,12 +332,14 @@ class Shortterm extends StatelessWidget {
                         ),
                         IconButton(
                           icon: Icon(Icons.edit,color: Colors.teal,),
-                          onPressed: () {
+                          onPressed: () async {
+                            String imageUrl = await getImageUrlFromFirebase(snapshot.data!.docs[index].id) ?? '';
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditShortTermScreen(
-                                  documentId:snapshot.data!.docs [index].id,
+                                builder: (context) => Editshortermscreen(
+                                  documentId: snapshot.data!.docs[index].id,
+                                  imageUrl: imageUrl,
                                 ),
                               ),
                             );
@@ -297,5 +355,16 @@ class Shortterm extends StatelessWidget {
         },
       ),
     );
+  }
+}
+Future<String?> getImageUrlFromFirebase(String documentId) async {
+  try {
+    // Fetch the document snapshot using the document ID
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Stocks').doc(documentId).get();
+    // Extract the image URL from the document snapshot
+    return documentSnapshot.get('imageUrl');
+  } catch (e) {
+    print('Error fetching image URL: $e');
+    return null;
   }
 }
