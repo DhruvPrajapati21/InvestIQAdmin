@@ -62,7 +62,7 @@ class _SpacescreenState extends State<Spacescreen> {
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
-                      color: Colors.cyan, // Changed text color to white
+                      color: Colors.white, // Changed text color to white
                     ),
                   ),
                 ),
@@ -74,7 +74,7 @@ class _SpacescreenState extends State<Spacescreen> {
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
-                      color: Colors.cyan, // Changed text color to white
+                      color: Colors.white, // Changed text color to white
                     ),
                   ),
                 ),
