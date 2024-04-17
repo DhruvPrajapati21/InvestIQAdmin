@@ -225,6 +225,15 @@ class _AddDataState extends State<AddData> {
                                 .colorScheme
                                 .onSurface), // Set the same color as enabled border
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white // Change border color to white for dark theme
+                              : Colors.black, // Change border color to black for light theme
+                        ),
+                      ),
                     ),
                     value: selectedOption,
                     items: items
@@ -249,6 +258,15 @@ class _AddDataState extends State<AddData> {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface), // Set the same color as enabled border
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white // Change border color to white for dark theme
+                              : Colors.black, // Change border color to black for light theme
+                        ),
                       ),
                     ),
                     value: selectedStatus,

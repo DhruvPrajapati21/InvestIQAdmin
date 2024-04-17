@@ -154,11 +154,19 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black),
+                      borderSide: BorderSide(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface), // Set the same color as enabled border
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white // Change border color to white for dark theme
+                            : Colors.black, // Change border color to black for light theme
+                      ),// Set the same color as enabled border
                     ),
                   ),
                   value: selectedIPO,

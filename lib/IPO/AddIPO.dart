@@ -235,7 +235,18 @@ class _AddIPOState extends State<AddIPO> {
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface), // Set the border color based on the current theme
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ), // Set the border color based on the current theme
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white // Change border color to white for dark theme
+                              : Colors.black, // Change border color to black for light theme
+                        ),
                       ),
                     ),
                     value: selectedIPO,
@@ -250,6 +261,7 @@ class _AddIPOState extends State<AddIPO> {
                     onChanged: (item) => setState(() => selectedIPO = item),
                   ),
                 ),
+
 
                 Padding(
                   padding: const EdgeInsets.all(8.0),

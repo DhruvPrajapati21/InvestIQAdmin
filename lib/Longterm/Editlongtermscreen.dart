@@ -154,51 +154,63 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width: 1, color: Colors.black)
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface), // Set the same color as enabled border
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white // Change border color to white for dark theme
+                            : Colors.black, // Change border color to black for light theme
+                      ),
                     ),
                   ),
                   value: selectedOption,
                   items: items
-                      .map((item) =>
-                      DropdownMenuItem<String>
-                        (value: item,
-                        child: Text(item, style: TextStyle(fontSize: 18)),
-                      ))
+                      .map((item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item, style: TextStyle(fontSize: 18)),
+                  ))
                       .toList(),
                   onChanged: (item) => setState(() => selectedOption = item),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(width: 1, color: Colors.black)
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface), // Set the same color as enabled border
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(width: 1, color: Colors.black), // Set the same color as enabled border
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white // Change border color to white for dark theme
+                            : Colors.black, // Change border color to black for light theme
+                      ),
                     ),
                   ),
                   value: selectedstatus,
                   items: status
-                      .map((item) =>
-                      DropdownMenuItem<String>
-                        (value: item,
-                        child: Text(item, style: TextStyle(fontSize: 18)),
-                      ))
+                      .map((item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(item, style: TextStyle(fontSize: 18)),
+                  ))
                       .toList(),
                   onChanged: (item) => setState(() => selectedstatus = item),
                 ),
