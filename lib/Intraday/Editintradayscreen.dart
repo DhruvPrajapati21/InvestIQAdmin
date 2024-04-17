@@ -64,17 +64,18 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
           .doc(widget.documentId)
           .get();
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          selectedOption = doc['category'];
-          selectedstatus = doc['status'];
-          _stockNameController.text = doc['stockName'];
-          _cmpController.text = doc['cmp'];
-          _targetController.text = doc['target'];
-          _slController.text = doc['sl'];
-          _remarkController.text = doc['remark'];
+      selectedOption = doc['category'];
+      selectedstatus = doc['status'];
+      _stockNameController.text = doc['stockName'];
+      _cmpController.text = doc['cmp'];
+      _targetController.text = doc['target'];
+      _slController.text = doc['sl'];
+      _remarkController.text = doc['remark'];
+
       // Handle the 'date' field correctly
       if (data['date'] is String) {
         // If it's a String, parse it as a DateTime
-        selectedDate = DateTime.parse(data['date']);
+        selectedDate = DateFormat('dd/MM/yyyy').parse(data['date']);
         dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       } else if (data['date'] is Timestamp) {
         // If it's a Timestamp, convert it to a DateTime
@@ -94,6 +95,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
     }
   }
 
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -110,6 +112,7 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
       });
     }
   }
+
   String _formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }

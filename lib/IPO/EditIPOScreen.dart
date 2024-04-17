@@ -34,10 +34,11 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
   TextEditingController lotController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
 
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -47,12 +48,13 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       });
     }
   }
 
   Future<void> _selectDate2(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate2 ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -62,6 +64,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
     if (pickedDate != null && pickedDate != selectedDate2) {
       setState(() {
         selectedDate2 = pickedDate;
+        // Update the text in the dateController to reflect the new selected date
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate2!);
       });
     }
   }
@@ -70,22 +74,55 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch existing data from Firestore and populate the fields
-    FirebaseFirestore.instance.collection('IPO').doc(widget.documentId).get().then((doc) {
-      if (doc.exists) {
-        setState(() {
-          selectedIPO = doc['status'];
-          stockNameController.text = doc['stockName'];
-          lotController.text = doc['lot'];
-          priceController.text = doc['price'];
-          selectedDate = DateTime.parse(doc['opendate']);
-          selectedDate2 = DateTime.parse(doc['closedate']);
-          remarkController.text = doc['remark'];
-        });
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('IPO')
+          .doc(widget.documentId)
+          .get();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      selectedIPO = doc['status'];
+      stockNameController.text = doc['stockName'];
+      lotController.text = doc['lot'];
+      priceController.text = doc['price'];
+      remarkController.text = doc['remark'];
+
+      // Handle the 'opendate' and 'closedate' fields correctly
+      if (data['opendate'] is String) {
+        // If it's a String, parse it as a DateTime
+        selectedDate = DateFormat('dd/MM/yyyy').parse(data['opendate']);
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      } else if (data['opendate'] is Timestamp) {
+        // If it's a Timestamp, convert it to a DateTime
+        Timestamp timestamp = data['opendate'] as Timestamp;
+        selectedDate = timestamp.toDate();
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       }
-    }).catchError((error) {
-      print("Failed to fetch document: $error");
-    });
+
+      // Handle the 'closedate' field in a similar manner
+      if (data['closedate'] is String) {
+        selectedDate2 = DateFormat('dd/MM/yyyy').parse(data['closedate']);
+      } else if (data['closedate'] is Timestamp) {
+        Timestamp timestamp = data['closedate'] as Timestamp;
+        selectedDate2 = timestamp.toDate();
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override

@@ -38,7 +38,7 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
   final TextEditingController _targetController = TextEditingController();
   final TextEditingController _slController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
 
   @override
@@ -47,26 +47,36 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
     _fetchData();
   }
 
-
-
   Future<void> _fetchData() async {
     try {
       setState(() {
         isLoading = true;
       });
 
-      DocumentSnapshot doc =
-      await FirebaseFirestore.instance.collection('Stocks').doc(widget.documentId).get();
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('Stocks')
+          .doc(widget.documentId)
+          .get();
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      selectedOption = doc['category'];
+      selectedstatus = doc['status'];
+      _stockNameController.text = doc['stockName'];
+      _cmpController.text = doc['cmp'];
+      _targetController.text = doc['target'];
+      _slController.text = doc['sl'];
+      _remarkController.text = doc['remark'];
 
-      _categoryController.text = data['category'];
-      _statusController.text = data['status'];
-      _stockNameController.text = data['stockName'];
-      _cmpController.text = data['cmp'];
-      _targetController.text = data['target'];
-      _slController.text = data['sl'];
-      _remarkController.text = data['remark'];
-      selectedDate = doc['date'] != null ? DateTime.parse(doc['date']) : null;
+      // Handle the 'date' field correctly
+      if (data['date'] is String) {
+        // If it's a String, parse it as a DateTime
+        selectedDate = DateFormat('dd/MM/yyyy').parse(data['date']);
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      } else if (data['date'] is Timestamp) {
+        // If it's a Timestamp, convert it to a DateTime
+        Timestamp timestamp = data['date'] as Timestamp;
+        selectedDate = timestamp.toDate();
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      }
 
       setState(() {
         isLoading = false;
@@ -79,7 +89,7 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
     }
   }
   Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -89,6 +99,8 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        // Update the text in the dateController to reflect the new selected date
+        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       });
     }
   }
