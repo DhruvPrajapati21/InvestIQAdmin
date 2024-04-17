@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:invest_iq/AuthView/Spacescreen.dart';
+import 'package:invest_iq/AuthView/Splashscreen.dart';
 import 'package:provider/provider.dart';
 import 'AuthView/Login.dart';
 import 'Admin.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Invest-IQ',
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).currentTheme,
-      home: Spacescreen(),
+      home: Splashscreen(),
     );
   }
 }

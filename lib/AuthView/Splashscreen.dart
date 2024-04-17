@@ -6,14 +6,14 @@ import 'package:invest_iq/AuthView/Login.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
-class Spacescreen extends StatefulWidget {
-  const Spacescreen({Key? key});
+class Splashscreen extends StatefulWidget {
+  const Splashscreen({Key? key});
 
   @override
-  State<Spacescreen> createState() => _SpacescreenState();
+  State<Splashscreen> createState() => _SplashscreenState();
 }
 
-class _SpacescreenState extends State<Spacescreen> {
+class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
@@ -62,7 +62,7 @@ class _SpacescreenState extends State<Spacescreen> {
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
-                      color: Colors.cyan, // Changed text color to white
+                      color: Colors.white, // Changed text color to white
                     ),
                   ),
                 ),
@@ -74,7 +74,7 @@ class _SpacescreenState extends State<Spacescreen> {
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
-                      color: Colors.cyan, // Changed text color to white
+                      color: Colors.white, // Changed text color to white
                     ),
                   ),
                 ),
