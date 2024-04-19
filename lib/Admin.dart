@@ -26,6 +26,15 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   bool _isDialogShowing = false;
 
+  void _navigateToPage(Widget page) {
+    Navigator.pop(context); // Close the drawer
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+          (route) => false, // Pop all existing routes
+    );
+  }
+
   Future<bool> _onWillPop() async {
     if (_isDialogShowing) {
       return false; // Return false if dialog is already showing

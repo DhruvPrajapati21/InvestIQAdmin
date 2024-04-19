@@ -20,6 +20,14 @@ class _ForgetpasswordState extends State<Forgetpassword> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
   TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // Clear text controllers when the screen is initialized
+    _emailController.clear();
+    _newPasswordController.clear();
+    _confirmPasswordController.clear();
+  }
 
   void resetPassword() async {
     String email = _emailController.text.trim();
@@ -58,7 +66,13 @@ class _ForgetpasswordState extends State<Forgetpassword> {
         // Update password in Firebase Authentication
         await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
 
+        // Clear text fields
+        _emailController.clear();
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
+
         // Show success message for password update
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Password updated successfully!"),
@@ -82,6 +96,26 @@ class _ForgetpasswordState extends State<Forgetpassword> {
       print("Error: $e");
     }
   }
+  bool _isStrongPassword(String value) {
+    // Check if the password contains '@'
+    if (!value.contains('@')) {
+      return false;
+    }
+
+    // Check if the password contains at least one uppercase letter
+    if (value.toUpperCase() == value) {
+      return false;
+    }
+
+    // Check if the password contains at least one lowercase letter
+    if (value.toLowerCase() == value) {
+      return false;
+    }
+
+    return true;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -146,16 +180,19 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                     child: TextFormField(
                       controller: _newPasswordController,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter Password";
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please enter a password";
+                        } else if (value.length < 8) {
+                          return "Password must be at least 8 characters long";
+                        } else if (!RegExp(r'^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+={};:<>|./?,-]).{8,}$').hasMatch(value)) {
+                          return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
                         }
                         return null;
                       },
                       obscureText: !passwordVisible,
                       decoration: InputDecoration(
                         labelText: "Enter Your New Password",
-                        labelStyle:
-                        TextStyle(color: Colors.cyan),
+                        labelStyle: TextStyle(color: Colors.cyan),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
