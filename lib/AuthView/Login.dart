@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invest_iq/Admin.dart';
 import 'package:invest_iq/AuthView/Signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:invest_iq/AuthView/Forgetpassword.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -49,8 +50,10 @@ class _LoginState extends State<Login> {
                 child: TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter email";
-                    } else if (!value.contains("@") || !value.contains(".")) {
+                      return "Please enter your email";
+                    } else if (!value.contains("@") ||
+                        !value.contains(".com") ||
+                        !value.contains("gmail")) {
                       return "Please enter valid email";
                     }
                     return null;
@@ -190,6 +193,20 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Forgetpassword()),
+                      );
+                    },
+                    child: Text("Forget Password?",style: TextStyle(color: Colors.cyan, ),),
+                  ),
+                ],
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(width: 10),
@@ -199,7 +216,7 @@ class _LoginState extends State<Login> {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) => Signup()));
                       },
-                      child: Text("Join us >>")),
+                      child: Text("Join us >>",style: TextStyle(color: Colors.cyan),)),
                 ],
               )
             ],

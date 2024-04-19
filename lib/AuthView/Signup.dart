@@ -163,7 +163,9 @@ class _SignupState extends State<Signup> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter your email";
-                      } else if (!value.contains("@") || !value.contains(".")) {
+                      } else if (!value.contains("@") ||
+                          !value.contains(".com") ||
+                          !value.contains("gmail")) {
                         return "Please enter valid email";
                       }
                       return null;
@@ -348,7 +350,7 @@ class _SignupState extends State<Signup> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Login()));
                         },
-                        child: Text("Join us Now >>"))
+                        child: Text("Join us Now >>",style: TextStyle(color: Colors.cyan),))
                   ],
                 )
               ],
