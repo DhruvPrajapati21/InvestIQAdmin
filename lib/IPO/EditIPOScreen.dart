@@ -125,6 +125,9 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
       });
     }
   }
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
