@@ -227,7 +227,7 @@ class Shortterm extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Card(
-                  color: Colors.white60,
+                  color: Colors.white,
                   margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Column(
@@ -253,14 +253,12 @@ class Shortterm extends StatelessWidget {
                           child: FutureBuilder<String?>(
                             future: getImageUrlFromFirebase(snapshot.data!.docs[index].id), // Pass the document ID
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator(); // Show a loading indicator while fetching the image URL
-                              } else if (snapshot.hasError) {
+                              if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 String imageUrl = snapshot.data ?? ''; // Use default value if imageUrl is null
                                 if (imageUrl.isEmpty) {
-                                  return Text('No image URL available');
+                                  return Container(); // Return an empty container if imageUrl is empty or still being fetched
                                 }
                                 return Container(
                                   height: 120,
@@ -283,7 +281,6 @@ class Shortterm extends StatelessWidget {
                               }
                             },
                           ),
-
                         ),
                       ],
                     ),

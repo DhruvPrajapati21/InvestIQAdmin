@@ -38,7 +38,8 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body:SingleChildScrollView(
+        child:Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.cyan, Colors.redAccent],
@@ -79,11 +80,12 @@ class _SplashscreenState extends State<Splashscreen> {
                   ),
                 ),
                 CircularProgressIndicator(color: Colors.white,),
-                SizedBox(width: 50, height: 50,),
+                SizedBox(height: 300,),
               ],
             ),
           ),
         ),
+      ),
       ),
     );
   }

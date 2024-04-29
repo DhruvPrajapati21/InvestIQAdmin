@@ -14,6 +14,7 @@ class _SignupState extends State<Signup> {
   final Form_key = GlobalKey<FormState>();
   var password = false, con_password = true;
   bool passwordVisible = false;
+  bool isNavigatingToLogin = false;
   bool con_passwordVisible = true;
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -268,6 +269,16 @@ class _SignupState extends State<Signup> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 2), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
+                        });
                         if (Form_key.currentState!.validate()) {
                           if (pass.text == cpass.text) {
                             // Check if passwords match
@@ -284,7 +295,11 @@ class _SignupState extends State<Signup> {
                                   "Password": pass.text.trim(),
                                 });
                               });
-                              Navigator.push(
+                              name.clear();
+                              email.clear();
+                              pass.clear();
+                              cpass.clear();
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Login()));
@@ -351,7 +366,7 @@ class _SignupState extends State<Signup> {
                     Text("Already an account?"),
                     TextButton(
                         onPressed: () {
-                          Navigator.push(context,
+                          Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: Text("Join us Now >>",style: TextStyle(color: Colors.cyan),))

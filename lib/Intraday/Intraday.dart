@@ -93,14 +93,12 @@ class Intraday extends StatelessWidget {
                           child: FutureBuilder<String?>(
                             future: getImageUrlFromFirebase(snapshot.data!.docs[index].id), // Pass the document ID
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator(); // Show a loading indicator while fetching the image URL
-                              } else if (snapshot.hasError) {
+                              if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 String imageUrl = snapshot.data ?? ''; // Use default value if imageUrl is null
                                 if (imageUrl.isEmpty) {
-                                  return Text('No image URL available');
+                                  return Container(); // Return an empty container if imageUrl is empty or still being fetched
                                 }
                                 return Container(
                                   height: 120,
@@ -123,7 +121,6 @@ class Intraday extends StatelessWidget {
                               }
                             },
                           ),
-
                         ),
                       ],
                     ),
@@ -191,16 +188,5 @@ class Intraday extends StatelessWidget {
         },
       ),
     );
-  }
-}
-Future<String?> getImageUrlFromFirebase(String documentId) async {
-  try {
-    // Fetch the document snapshot using the document ID
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('Stocks').doc(documentId).get();
-    // Extract the image URL from the document snapshot
-    return documentSnapshot.get('imageUrl');
-  } catch (e) {
-    print('Error fetching image URL: $e');
-    return null;
   }
 }

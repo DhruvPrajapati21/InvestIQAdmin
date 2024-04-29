@@ -17,7 +17,7 @@ class AddData extends StatefulWidget {
 class _AddDataState extends State<AddData> {
   List<String> items = ['Category', 'IntraDay', 'Short Term', 'Long Term'];
   String? selectedOption = 'Category';
-
+  bool isNavigatingToLogin = true;
   List<String> items1 = [
     'Status',
     'Active',
@@ -35,6 +35,7 @@ class _AddDataState extends State<AddData> {
   TextEditingController targetController = TextEditingController();
   TextEditingController slController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
+
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -397,6 +398,16 @@ class _AddDataState extends State<AddData> {
                           // If an image is selected, proceed to add data
                           _addToFirestore();
                         }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 5), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.cyan,

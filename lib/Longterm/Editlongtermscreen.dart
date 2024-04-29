@@ -30,6 +30,7 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
   String imageUrl = '';
   File? selectedImage;
   bool isLoading = false;
+  bool isNavigatingToLogin = true;
   // Define TextEditingController for each field
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
@@ -363,7 +364,16 @@ class _EditlongtermscreenState extends State<Editlongtermscreen> {
                         setState(() {
                           isLoading = true; // Set loading state to true
                         });
-
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 2), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
+                        });
                         try {
                           // Check if a new image is selected
                           if (selectedImage != null) {

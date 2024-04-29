@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invest_iq/AuthView/Login.dart';
+import 'package:invest_iq/AuthView/Signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,6 +13,7 @@ class Forgetpassword extends StatefulWidget {
 class _ForgetpasswordState extends State<Forgetpassword> {
   bool passwordVisible = false;
   bool con_passwordVisible = true;
+  bool isNavigatingToLogin = false;
   var password = false,
       con_password = true;
   bool isLoading = false;
@@ -28,8 +30,17 @@ class _ForgetpasswordState extends State<Forgetpassword> {
     _newPasswordController.clear();
     _confirmPasswordController.clear();
   }
-
   void resetPassword() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Please wait..."),
+        duration: Duration(seconds: 2), // Adjust the duration as needed
+      ),
+    );
+    await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+    setState(() {
+      isNavigatingToLogin = true;
+    });
     String email = _emailController.text.trim();
     String newPassword = _newPasswordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
@@ -72,7 +83,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
         _confirmPasswordController.clear();
 
         // Show success message for password update
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Password updated successfully!"),
@@ -280,6 +291,21 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                         child: Text("Forget Password"),
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Don't have an account?"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Signup()),
+                          );
+                        },
+                        child: Text("Join us >>",style: TextStyle(color: Colors.cyan),),
+                      ),
+                    ],
                   )
                 ],
               ),

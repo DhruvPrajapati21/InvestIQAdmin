@@ -28,6 +28,7 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
   DateTime? selectedDate;
   String imageUrl = '';
   File? selectedImage;
+  bool isNavigatingToLogin = true;
   // Define TextEditingController for each field
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _stockNameController = TextEditingController();
@@ -348,6 +349,16 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                         // All required fields are filled, proceed with updating Firestore document
                         setState(() {
                           isLoading = true; // Set loading state to true
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 2), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
                         });
 
                         try {

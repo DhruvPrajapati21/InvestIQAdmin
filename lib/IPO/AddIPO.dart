@@ -22,6 +22,7 @@ class _AddIPOState extends State<AddIPO> {
   String imageUrl = '';
   File? selectedImage;
   bool isLoading = false;
+  bool isNavigatingToLogin = true;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController stockNameController = TextEditingController();
   TextEditingController lotController = TextEditingController();
@@ -396,6 +397,16 @@ class _AddIPOState extends State<AddIPO> {
                           // If an image is selected, proceed to add data
                           _addToFirestore();
                         }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 5), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.cyan,
