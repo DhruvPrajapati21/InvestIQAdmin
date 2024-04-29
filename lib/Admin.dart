@@ -24,14 +24,10 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDialogShowing = false;
 
   Future<bool> _onWillPop() async {
-    if (_scaffoldKey.currentState!.isDrawerOpen) {
-      _scaffoldKey.currentState!.openEndDrawer(); // Close the drawer
-      return false; // Do not exit the app
-    } else if (_isDialogShowing) {
+    if (_isDialogShowing) {
       return false; // Return false if dialog is already showing
     }
 
@@ -40,14 +36,10 @@ class _AdminState extends State<Admin> {
 
     bool? confirmExit = await showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: false, // Prevent dismissing the dialog with back button
       builder: (context) => AlertDialog(
-        title: const Text('Exit Invest-IQ?',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-        content: const Text('Are you sure you want to exit?',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+        title: const Text('Exit Invest-IQ?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+        content: const Text('Are you sure you want to exit?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
         actions: [
           TextButton(
             onPressed: () {
@@ -76,7 +68,6 @@ class _AdminState extends State<Admin> {
     // Return the result of the dialog or false if dialog was dismissed
     return confirmExit ?? false;
   }
-
   Widget _buildCard(Widget child, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -97,16 +88,14 @@ class _AdminState extends State<Admin> {
     );
   }
 
+
+
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            "Logout Invest-IQ?",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-          ),
+          title: const Text("Logout Invest-IQ?",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),),
           content: const Text("Are you sure you want to logout?"),
           actions: <Widget>[
             TextButton(
@@ -133,12 +122,33 @@ class _AdminState extends State<Admin> {
     );
   }
 
+  Widget _buildCard1(Widget child) {
+    return Container(
+      height: 180,
+      width: 180,
+      child: GestureDetector(
+        onTap: () {
+          // Navigate to the corresponding screen
+        },
+        child: Card(
+          color: Colors.white70,
+          shape: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          elevation: 10.0,
+          margin: EdgeInsets.all(10.0),
+          shadowColor: Colors.black87,
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
@@ -184,34 +194,28 @@ class _AdminState extends State<Admin> {
                 leading: const Icon(Icons.home),
                 title: const Text('Home'),
                 onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Admin()));
+                  Navigator.pop(context);
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_box),
                 title: const Text("Add Data"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddData()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AddData()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_chart),
                 title: const Text("Add IPO"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddIPO()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AddIPO()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.announcement),
                 title: const Text("Add Guidelines"),
@@ -220,9 +224,7 @@ class _AdminState extends State<Admin> {
                       MaterialPageRoute(builder: (context) => AddGuidelines()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.notification_add),
                 title: const Text("Notifications"),
@@ -231,23 +233,15 @@ class _AdminState extends State<Admin> {
                       MaterialPageRoute(builder: (context) => Notifications()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
-                leading: const Icon(
-                  Icons.sunny_snowing,
-                  size: 25,
-                ),
+                leading: const Icon(Icons.sunny_snowing,size: 25,),
                 title: const Text("Theme"),
                 onTap: () {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleTheme();
+                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),
                 title: const Text("Logout"),
@@ -255,15 +249,12 @@ class _AdminState extends State<Admin> {
                   showLogoutConfirmationDialog(context);
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
             ],
           ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-              children: [
+        body: Column(
+          children: [
             SizedBox(
               width: 40,
               height: 40,
@@ -279,125 +270,120 @@ class _AdminState extends State<Admin> {
             SizedBox(
               height: 20,
             ),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: [
-                _buildCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/images/u4.png",
-                        height: 70,
-                        width: 70,
-                      ),
-                      SizedBox(height: 10),
-                      Text("IntraDay",
-                          style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ],
-                  ),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Intraday()),
-                    );
-                  },
-                ),
-                _buildCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/x2.png",
-                          height: 60, width: 60),
-                      SizedBox(height: 10),
-                      Text("Short Term",
-                          style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ],
-                  ),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Shortterm()),
-                    );
-                  },
-                ),
-                _buildCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/u2.png",
-                          height: 50, width: 50),
-                      SizedBox(height: 10),
-                      Text("Long Term",
-                          style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ],
-                  ),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Longterm()),
-                    );
-                  },
-                ),
-                _buildCard(
-                  Column(
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                children: [
+                  _buildCard(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/x4.png",
-                            height: 50, width: 50),
+                        Image.asset(
+                          "assets/images/u4.png",
+                          height: 70,
+                          width: 70,
+                        ),
                         SizedBox(height: 10),
-                        Text("IPO",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
-                      ]),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => IPO()),
-                    );
-                  },
-                ),
-                _buildCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/x5.png",
-                          height: 50, width: 50),
-                      SizedBox(height: 10),
-                      Text("All Users",
-                          style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ],
+                        Text("IntraDay",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Intraday()),
+                      );
+                    },
                   ),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Allusers()),
-                    );
-                  },
-                ),
-                _buildCard(
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/u3.png",
-                          height: 50, width: 50),
-                      SizedBox(height: 10),
-                      Text("Free Guidelines",
-                          style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ],
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/x2.png", height: 60, width: 60),
+                        SizedBox(height: 10),
+                        Text("Short Term",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Shortterm()),
+                      );
+                    },
                   ),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Freeguidelines()),
-                    );
-                  },
-                ),
-              ],
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/u2.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("Long Term",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Longterm()),
+                      );
+                    },
+                  ),
+                  _buildCard(
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/images/x4.png", height: 50, width: 50),
+                          SizedBox(height: 10),
+                          Text("IPO",
+                              style: TextStyle(color: Colors.black, fontSize: 16)),
+                        ]
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => IPO()),
+                      );
+                    },
+                  ),
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/x5.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("All Users", style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Allusers()),
+                      );
+                    },
+                  ),
+
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/u3.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("Free Guidelines",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Freeguidelines()),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ]),
+          ],
         ),
       ),
     );
