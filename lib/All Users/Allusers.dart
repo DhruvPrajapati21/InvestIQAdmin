@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invest_iq/All Users/AllUsersModel.dart';
-import 'package:invest_iq/AuthView/Spacescreen.dart';
+import 'package:invest_iq/AuthView/Splashscreen.dart';
 import 'package:invest_iq/Admin.dart';
 
 class Allusers extends StatefulWidget {

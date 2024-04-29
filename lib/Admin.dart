@@ -275,19 +275,19 @@ class _AdminState extends State<Admin> {
                 crossAxisCount: 2,
                 children: [
                   _buildCard(
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/u4.png",
-                            height: 70,
-                            width: 70,
-                          ),
-                          SizedBox(height: 10),
-                          Text("IntraDay",
-                              style: TextStyle(color: Colors.black, fontSize: 16)),
-                        ],
-                      ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/u4.png",
+                          height: 70,
+                          width: 70,
+                        ),
+                        SizedBox(height: 10),
+                        Text("IntraDay",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
                         () {
                       Navigator.push(
                         context,
@@ -297,14 +297,14 @@ class _AdminState extends State<Admin> {
                   ),
                   _buildCard(
                     Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/images/x2.png", height: 60, width: 60),
-                          SizedBox(height: 10),
-                          Text("Short Term",
-                              style: TextStyle(color: Colors.black, fontSize: 16)),
-                        ],
-                      ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/x2.png", height: 60, width: 60),
+                        SizedBox(height: 10),
+                        Text("Short Term",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
                         () {
                       Navigator.push(
                         context,
@@ -314,14 +314,14 @@ class _AdminState extends State<Admin> {
                   ),
                   _buildCard(
                     Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/images/u2.png", height: 50, width: 50),
-                          SizedBox(height: 10),
-                          Text("Long Term",
-                              style: TextStyle(color: Colors.black, fontSize: 16)),
-                        ],
-                      ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/u2.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("Long Term",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
                         () {
                       Navigator.push(
                         context,
@@ -337,49 +337,49 @@ class _AdminState extends State<Admin> {
                           SizedBox(height: 10),
                           Text("IPO",
                               style: TextStyle(color: Colors.black, fontSize: 16)),
-                    ]
+                        ]
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => IPO()),
+                      );
+                    },
                   ),
-          () {
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => IPO()),
-    );
-    },
-    ),
-        _buildCard(
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/images/x5.png", height: 50, width: 50),
-              SizedBox(height: 10),
-              Text("All Users", style: TextStyle(color: Colors.black, fontSize: 16)),
-            ],
-          ),
-              () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Allusers()),
-            );
-          },
-        ),
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/x5.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("All Users", style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Allusers()),
+                      );
+                    },
+                  ),
 
-        _buildCard(
-                  Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset("assets/images/u3.png", height: 50, width: 50),
-                          SizedBox(height: 10),
-                          Text("Free Guidelines",
-                              style: TextStyle(color: Colors.black, fontSize: 16)),
-                        ],
-                      ),
-              () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Freeguidelines()),
-            );
-          },
-        ),
+                  _buildCard(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/u3.png", height: 50, width: 50),
+                        SizedBox(height: 10),
+                        Text("Free Guidelines",
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
+                      ],
+                    ),
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Freeguidelines()),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

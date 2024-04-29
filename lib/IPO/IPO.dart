@@ -7,6 +7,18 @@ import 'package:invest_iq/IPO/EditIPOScreen.dart';
 import 'package:invest_iq/Admin.dart';
 
 class IPO extends StatelessWidget {
+  Future<String?> getImageUrlFromFirebase(String documentId) async {
+    try {
+      // Fetch the document snapshot using the document ID
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance.collection('IPO').doc(documentId).get();
+      // Extract the image URL from the document snapshot
+      return documentSnapshot.get('imageUrl');
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,17 +33,17 @@ class IPO extends StatelessWidget {
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.home, size: 25, color: Colors.white),
-        //     onPressed: () {
-        //       Navigator.pushReplacement(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => Admin()),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('IPO').snapshots(),
@@ -56,7 +68,7 @@ class IPO extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Card(
-                  color: Colors.white60,
+                  color: Colors.white,
                   margin: EdgeInsets.all(11.0),
                   child: ListTile(
                     subtitle: Column(
@@ -69,6 +81,47 @@ class IPO extends StatelessWidget {
                         Text('Open Date: ${IPOModel.opendate}'),
                         Text('Close Date: ${IPOModel.closedate}'),
                         Text('Remark: ${IPOModel.remark.trim()}'),
+                        Card(
+                          surfaceTintColor: Colors.cyan,
+                          elevation: 8.0,
+                          shadowColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(color: Colors.black, width: 1.0),
+                          ),
+                          margin: EdgeInsets.all(10.0),
+                          child: FutureBuilder<String?>(
+                            future: getImageUrlFromFirebase(snapshot.data!.docs[index].id), // Pass the document ID
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                String imageUrl = snapshot.data ?? ''; // Use default value if imageUrl is null
+                                if (imageUrl.isEmpty) {
+                                  return Container(); // Return an empty container if imageUrl is empty or still being fetched
+                                }
+                                return Container(
+                                  height: 120,
+                                  width: 120,
+                                  child: Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.fill,
+                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return CircularProgressIndicator(value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                            : null);
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) => Text('Error loading image: $error'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     trailing: Row(
@@ -122,12 +175,14 @@ class IPO extends StatelessWidget {
                             Icons.edit,
                             color: Colors.teal,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            String imageUrl = await getImageUrlFromFirebase(IPOModel.documentId) ?? '';
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditIPOScreen(
                                   documentId: snapshot.data!.docs[index].id,
+                                  Image: imageUrl, // Pass the image URL here
                                 ),
                               ),
                             );

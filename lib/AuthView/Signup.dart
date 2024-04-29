@@ -14,6 +14,7 @@ class _SignupState extends State<Signup> {
   final Form_key = GlobalKey<FormState>();
   var password = false, con_password = true;
   bool passwordVisible = false;
+  bool isNavigatingToLogin = false;
   bool con_passwordVisible = true;
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -163,7 +164,9 @@ class _SignupState extends State<Signup> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter your email";
-                      } else if (!value.contains("@") || !value.contains(".")) {
+                      } else if (!value.contains("@") ||
+                          !value.contains(".com") ||
+                          !value.contains("gmail")) {
                         return "Please enter valid email";
                       }
                       return null;
@@ -183,8 +186,12 @@ class _SignupState extends State<Signup> {
                   child: TextFormField(
                     controller: pass,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter Password";
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a password";
+                      } else if (value.length < 8) {
+                        return "Password must be at least 8 characters long";
+                      } else if (!RegExp(r'^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+={};:<>|./?,-]).{8,}$').hasMatch(value)) {
+                        return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
                       }
                       return null;
                     },
@@ -262,6 +269,16 @@ class _SignupState extends State<Signup> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Please wait..."),
+                            duration: Duration(seconds: 2), // Adjust the duration as needed
+                          ),
+                        );
+                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        setState(() {
+                          isNavigatingToLogin = true;
+                        });
                         if (Form_key.currentState!.validate()) {
                           if (pass.text == cpass.text) {
                             // Check if passwords match
@@ -278,7 +295,11 @@ class _SignupState extends State<Signup> {
                                   "Password": pass.text.trim(),
                                 });
                               });
-                              Navigator.push(
+                              name.clear();
+                              email.clear();
+                              pass.clear();
+                              cpass.clear();
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Login()));
@@ -345,10 +366,10 @@ class _SignupState extends State<Signup> {
                     Text("Already an account?"),
                     TextButton(
                         onPressed: () {
-                          Navigator.push(context,
+                          Navigator.pushReplacement(context,
                               MaterialPageRoute(builder: (context) => Login()));
                         },
-                        child: Text("Join us Now >>"))
+                        child: Text("Join us Now >>",style: TextStyle(color: Colors.cyan),))
                   ],
                 )
               ],
