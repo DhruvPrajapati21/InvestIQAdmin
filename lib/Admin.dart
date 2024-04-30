@@ -24,50 +24,49 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDialogShowing = false;
 
   Future<bool> _onWillPop() async {
-    if (_isDialogShowing) {
-      return false; // Return false if dialog is already showing
+    if (_scaffoldKey.currentState!.isDrawerOpen) {
+      _scaffoldKey.currentState!.openEndDrawer();
+      return false; // Prevent default back button behavior
+    } else if (!_isDialogShowing) {
+      _isDialogShowing = true;
+      bool? confirmExit = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: const Text('Exit Invest-IQ?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+          content: const Text('Are you sure you want to exit?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isDialogShowing = false;
+                });
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isDialogShowing = false;
+                });
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        ),
+      );
+      return confirmExit ?? false;
+    } else {
+      return false; // Prevent default back button behavior
     }
-
-    // Set the flag to indicate the dialog is being shown
-    _isDialogShowing = true;
-
-    bool? confirmExit = await showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent dismissing the dialog with back button
-      builder: (context) => AlertDialog(
-        title: const Text('Exit Invest-IQ?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-        content: const Text('Are you sure you want to exit?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Reset the flag and dismiss the dialog with false result
-              setState(() {
-                _isDialogShowing = false;
-              });
-              Navigator.of(context).pop(false);
-            },
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () {
-              // Reset the flag and dismiss the dialog with true result
-              setState(() {
-                _isDialogShowing = false;
-              });
-              Navigator.of(context).pop(true);
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-
-    // Return the result of the dialog or false if dialog was dismissed
-    return confirmExit ?? false;
   }
+
   Widget _buildCard(Widget child, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -87,9 +86,6 @@ class _AdminState extends State<Admin> {
       ),
     );
   }
-
-
-
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -149,6 +145,7 @@ class _AdminState extends State<Admin> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
@@ -253,7 +250,8 @@ class _AdminState extends State<Admin> {
             ],
           ),
         ),
-        body: Column(
+        body:SingleChildScrollView(
+       child:Column(
           children: [
             SizedBox(
               width: 40,
@@ -270,9 +268,10 @@ class _AdminState extends State<Admin> {
             SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: GridView.count(
+            GridView.count(
                 crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
                 children: [
                   _buildCard(
                     Column(
@@ -382,9 +381,9 @@ class _AdminState extends State<Admin> {
                   ),
                 ],
               ),
-            ),
           ],
         ),
+      ),
       ),
     );
   }
