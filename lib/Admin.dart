@@ -10,7 +10,6 @@ import 'package:invest_iq/Notifications.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/All Users/Allusers.dart';
 import 'package:invest_iq/IPO/AddIPO.dart';
-import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +25,7 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDialogShowing = false;
+  int _selectedIndex = 0;
 
   Future<bool> _onWillPop() async {
     if (_scaffoldKey.currentState!.isDrawerOpen) {
@@ -37,12 +37,11 @@ class _AdminState extends State<Admin> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          title: const Text('Exit Invest-IQ?',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
-          content: const Text('Are you sure you want to exit?',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+          title: const Text(
+            'Exit Invest-IQ?',
+            style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+          ),
+          content: const Text('Are you sure you want to exit?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
           actions: [
             TextButton(
               onPressed: () {
@@ -96,11 +95,7 @@ class _AdminState extends State<Admin> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            "Logout Invest-IQ?",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-          ),
+          title: const Text("Logout Invest-IQ?",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),),
           content: const Text("Are you sure you want to logout?"),
           actions: <Widget>[
             TextButton(
@@ -117,7 +112,7 @@ class _AdminState extends State<Admin> {
                   MaterialPageRoute(
                     builder: (context) => const Login(),
                   ),
-                  (route) => false,
+                      (route) => false,
                 );
               },
             ),
@@ -149,13 +144,19 @@ class _AdminState extends State<Admin> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
+        appBar: _selectedIndex == 0 ? AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
             "Invest-IQ",
@@ -167,8 +168,8 @@ class _AdminState extends State<Admin> {
           ),
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.white),
-        ),
-        drawer: Drawer(
+        ) : null,
+        drawer: _selectedIndex == 0 ? Drawer(
           width: 220,
           child: ListView(
             padding: EdgeInsets.zero,
@@ -203,31 +204,25 @@ class _AdminState extends State<Admin> {
                   Navigator.pop(context);
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_box),
                 title: const Text("Add Data"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddData()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AddData()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.add_chart),
                 title: const Text("Add IPO"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddIPO()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => AddIPO()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.announcement),
                 title: const Text("Add Guidelines"),
@@ -236,9 +231,7 @@ class _AdminState extends State<Admin> {
                       MaterialPageRoute(builder: (context) => AddGuidelines()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.notification_add),
                 title: const Text("Notifications"),
@@ -247,23 +240,15 @@ class _AdminState extends State<Admin> {
                       MaterialPageRoute(builder: (context) => Notifications()));
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
-                leading: const Icon(
-                  Icons.sunny_snowing,
-                  size: 25,
-                ),
+                leading: const Icon(Icons.sunny_snowing,size: 25,),
                 title: const Text("Theme"),
                 onTap: () {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleTheme();
+                  Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),
                 title: const Text("Logout"),
@@ -271,13 +256,12 @@ class _AdminState extends State<Admin> {
                   showLogoutConfirmationDialog(context);
                 },
               ),
-              const Divider(
-                thickness: 2,
-              ),
+              const Divider(thickness: 2,),
             ],
           ),
-        ),
-        body: SingleChildScrollView(
+        ) : null,
+        body: _selectedIndex == 0
+            ? SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
@@ -311,11 +295,10 @@ class _AdminState extends State<Admin> {
                         ),
                         SizedBox(height: 10),
                         Text("IntraDay",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
                       ],
                     ),
-                    () {
+                        () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Intraday()),
@@ -326,15 +309,13 @@ class _AdminState extends State<Admin> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/x2.png",
-                            height: 60, width: 60),
+                        Image.asset("assets/images/x2.png", height: 60, width: 60),
                         SizedBox(height: 10),
                         Text("Short Term",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
                       ],
                     ),
-                    () {
+                        () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Shortterm()),
@@ -345,15 +326,13 @@ class _AdminState extends State<Admin> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/u2.png",
-                            height: 50, width: 50),
+                        Image.asset("assets/images/u2.png", height: 50, width: 50),
                         SizedBox(height: 10),
                         Text("Long Term",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
                       ],
                     ),
-                    () {
+                        () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Longterm()),
@@ -364,14 +343,13 @@ class _AdminState extends State<Admin> {
                     Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset("assets/images/x4.png",
-                              height: 50, width: 50),
+                          Image.asset("assets/images/x4.png", height: 50, width: 50),
                           SizedBox(height: 10),
                           Text("IPO",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16)),
-                        ]),
-                    () {
+                              style: TextStyle(color: Colors.black, fontSize: 16)),
+                        ]
+                    ),
+                        () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => IPO()),
@@ -382,15 +360,12 @@ class _AdminState extends State<Admin> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/x5.png",
-                            height: 50, width: 50),
+                        Image.asset("assets/images/x5.png", height: 50, width: 50),
                         SizedBox(height: 10),
-                        Text("All Users",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
+                        Text("All Users", style: TextStyle(color: Colors.black, fontSize: 16)),
                       ],
                     ),
-                    () {
+                        () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Allusers()),
@@ -401,19 +376,16 @@ class _AdminState extends State<Admin> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/u3.png",
-                            height: 50, width: 50),
+                        Image.asset("assets/images/u3.png", height: 50, width: 50),
                         SizedBox(height: 10),
                         Text("Free Guidelines",
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 16)),
+                            style: TextStyle(color: Colors.black, fontSize: 16)),
                       ],
                     ),
-                    () {
+                        () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => Freeguidelines()),
+                        MaterialPageRoute(builder: (context) => Freeguidelines()),
                       );
                     },
                   ),
@@ -421,6 +393,47 @@ class _AdminState extends State<Admin> {
               ),
             ],
           ),
+        )
+            : _selectedIndex == 1
+            ? Intraday()
+            : _selectedIndex == 2
+            ? Shortterm()
+            : _selectedIndex == 3
+            ? Longterm()
+            : _selectedIndex == 4
+            ? IPO()
+            : SizedBox(), // Placeholder for other pages
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.admin_panel_settings),
+              label: 'Admin',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.access_time),
+              label: 'Intraday',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.timeline),
+              label: 'Short Term',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.bar_chart),
+              label: 'Long Term',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.business),
+              label: 'IPO',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _onItemTapped,
         ),
       ),
     );
