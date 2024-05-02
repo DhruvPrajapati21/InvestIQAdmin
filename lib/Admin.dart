@@ -10,7 +10,6 @@ import 'package:invest_iq/Notifications.dart';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
 import 'package:invest_iq/All Users/Allusers.dart';
 import 'package:invest_iq/IPO/AddIPO.dart';
-import 'package:invest_iq/Intraday/Intraday.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +25,7 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isDialogShowing = false;
+  int _selectedIndex = 0;
 
   Future<bool> _onWillPop() async {
     if (_scaffoldKey.currentState!.isDrawerOpen) {
@@ -37,7 +37,10 @@ class _AdminState extends State<Admin> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          title: const Text('Exit Invest-IQ?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
+          title: const Text(
+            'Exit Invest-IQ?',
+            style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+          ),
           content: const Text('Are you sure you want to exit?', style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)),
           actions: [
             TextButton(
@@ -86,6 +89,7 @@ class _AdminState extends State<Admin> {
       ),
     );
   }
+
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -140,13 +144,19 @@ class _AdminState extends State<Admin> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
+        appBar: _selectedIndex == 0 ? AppBar(
           backgroundColor: Colors.cyan,
           title: Text(
             "Invest-IQ",
@@ -158,8 +168,8 @@ class _AdminState extends State<Admin> {
           ),
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.white),
-        ),
-        drawer: Drawer(
+        ) : null,
+        drawer: _selectedIndex == 0 ? Drawer(
           width: 220,
           child: ListView(
             padding: EdgeInsets.zero,
@@ -249,26 +259,27 @@ class _AdminState extends State<Admin> {
               const Divider(thickness: 2,),
             ],
           ),
-        ),
-        body:SingleChildScrollView(
-       child:Column(
-          children: [
-            SizedBox(
-              width: 40,
-              height: 40,
-            ),
-            Text(
-              "Invest-IQ Admin",
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+        ) : null,
+        body: _selectedIndex == 0
+            ? SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 40,
+                height: 40,
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            GridView.count(
+              Text(
+                "Invest-IQ Admin",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
@@ -361,7 +372,6 @@ class _AdminState extends State<Admin> {
                       );
                     },
                   ),
-
                   _buildCard(
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -381,9 +391,50 @@ class _AdminState extends State<Admin> {
                   ),
                 ],
               ),
+            ],
+          ),
+        )
+            : _selectedIndex == 1
+            ? Intraday()
+            : _selectedIndex == 2
+            ? Shortterm()
+            : _selectedIndex == 3
+            ? Longterm()
+            : _selectedIndex == 4
+            ? IPO()
+            : SizedBox(), // Placeholder for other pages
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.admin_panel_settings),
+              label: 'Admin',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.access_time),
+              label: 'Intraday',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.timeline),
+              label: 'Short Term',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.bar_chart),
+              label: 'Long Term',
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Colors.cyan,
+              icon: Icon(Icons.business),
+              label: 'IPO',
+            ),
           ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _onItemTapped,
         ),
-      ),
       ),
     );
   }
