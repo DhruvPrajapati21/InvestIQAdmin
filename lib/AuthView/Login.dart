@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:invest_iq/Admin.dart';
 import 'package:invest_iq/AuthView/Signup.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invest_iq/AuthView/Forgetpassword.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.setPersistence(Persistence.NONE);
+
+  // Check if the user is already logged in
+  User? user = FirebaseAuth.instance.currentUser;
+  Widget homeScreen = user != null ? Admin() : Login();
+
+  runApp(MyApp(homeScreen: homeScreen));
+}
+
+class MyApp extends StatelessWidget {
+  final Widget homeScreen;
+
+  const MyApp({required this.homeScreen});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Invest-IQ',
+      theme: ThemeData(
+        primarySwatch: Colors.cyan,
+      ),
+      home: homeScreen,
+    );
+  }
+}
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -122,7 +153,8 @@ class _LoginState extends State<Login> {
                             final savedPassword = userData['Password'];
                             if (savedPassword == name2Controller.text) {
                               // Password matches, proceed with login
-                              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                              await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
                                 email: name1Controller.text,
                                 password: name2Controller.text,
                               );
@@ -137,7 +169,8 @@ class _LoginState extends State<Login> {
                               );
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => Admin()),
+                                MaterialPageRoute(
+                                    builder: (context) => Admin()),
                               );
                             } else {
                               // Password doesn't match

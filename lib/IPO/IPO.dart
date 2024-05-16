@@ -19,6 +19,8 @@ class IPO extends StatelessWidget {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +39,7 @@ class IPO extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
@@ -74,13 +77,13 @@ class IPO extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Status: ${IPOModel.status}'),
-                        Text('Stock Name: ${IPOModel.stockName.trim()}'),
-                        Text('Lot: ${IPOModel.lot.trim()}'),
-                        Text('Price: ${IPOModel.price.trim()}'),
-                        Text('Open Date: ${IPOModel.opendate}'),
-                        Text('Close Date: ${IPOModel.closedate}'),
-                        Text('Remark: ${IPOModel.remark.trim()}'),
+                        Text('Status: ${IPOModel.status}',style: TextStyle(color: Colors.black),),
+                        Text('Stock Name: ${IPOModel.stockName.trim()}',style: TextStyle(color: Colors.black),),
+                        Text('Lot: ${IPOModel.lot.trim()}',style: TextStyle(color: Colors.black),),
+                        Text('Price: ${IPOModel.price.trim()}',style: TextStyle(color: Colors.black),),
+                        Text('Open Date: ${IPOModel.opendate}',style: TextStyle(color: Colors.black),),
+                        Text('Close Date: ${IPOModel.closedate}',style: TextStyle(color: Colors.black),),
+                        Text('Remark: ${IPOModel.remark.trim()}',style: TextStyle(color: Colors.black),),
                         Card(
                           surfaceTintColor: Colors.cyan,
                           elevation: 8.0,
@@ -106,15 +109,6 @@ class IPO extends StatelessWidget {
                                   child: Image.network(
                                     imageUrl,
                                     fit: BoxFit.fill,
-                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return CircularProgressIndicator(value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                            : null);
-                                      }
-                                    },
                                     errorBuilder: (context, error, stackTrace) => Text('Error loading image: $error'),
                                   ),
                                 );

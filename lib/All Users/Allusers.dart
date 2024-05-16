@@ -31,7 +31,8 @@ class _AllusersState extends State<Allusers> {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
-              Navigator.push(
+              Navigator.pop(context);
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
               );
@@ -95,10 +96,9 @@ class _AllusersState extends State<Allusers> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Name: ${AllUsersModel.Username}',
-                          ),
+                            'Name: ${AllUsersModel.Username}',style: TextStyle(color: Colors.black),),
                           SizedBox(height: 10),
-                          Text('Email: ${AllUsersModel.Email}'),
+                          Text('Email: ${AllUsersModel.Email}',style: TextStyle(color: Colors.black),),
                         ],
                       ),
                     ),

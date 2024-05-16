@@ -15,7 +15,7 @@ class AddIPO extends StatefulWidget {
 }
 
 class _AddIPOState extends State<AddIPO> {
-  List<String> ipo = ['Status', 'All', 'Current', 'Upcoming'];
+  List<String> ipo = ['Status','Current', 'Upcoming'];
   String? selectedIPO = 'Status';
   DateTime? selectedDate;
   DateTime? selectedDate2;
@@ -196,7 +196,8 @@ class _AddIPOState extends State<AddIPO> {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
-              Navigator.push(
+              Navigator.pop(context);
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
               );
@@ -386,7 +387,6 @@ class _AddIPOState extends State<AddIPO> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (selectedImage == null) {
-                          // If no image is selected, show a message
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Please select an image.'),
@@ -394,16 +394,15 @@ class _AddIPOState extends State<AddIPO> {
                             ),
                           );
                         } else {
-                          // If an image is selected, proceed to add data
                           _addToFirestore();
                         }
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text("Please wait..."),
-                            duration: Duration(seconds: 5), // Adjust the duration as needed
+                            duration: Duration(seconds: 5),
                           ),
                         );
-                        await Future.delayed(Duration(seconds: 2)); // Delay for 2 seconds
+                        await Future.delayed(Duration(seconds: 2));
                         setState(() {
                           isNavigatingToLogin = true;
                         });

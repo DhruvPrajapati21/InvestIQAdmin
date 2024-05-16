@@ -1,7 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:invest_iq/AuthView/Login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../Admin.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.setPersistence(Persistence.NONE);
+
+  // Check if the user is already logged in
+  User? user = FirebaseAuth.instance.currentUser;
+  Widget homeScreen = user != null ? Admin() : Login();
+
+  runApp(MyApp(homeScreen: homeScreen));
+}
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -249,6 +264,7 @@ class _SignupState extends State<Signup> {
                             } else {
                               con_password = true;
                             }
+
 
                             con_passwordVisible = !con_passwordVisible;
                           });

@@ -136,7 +136,8 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
-              Navigator.push(
+              Navigator.pop(context);
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
               );
@@ -445,7 +446,9 @@ class _EditintradayscreenState extends State<Editintradayscreen> {
                         }
                       }
                     },
-                    child: Text(
+                    child: isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
                       "Save Changes",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),

@@ -10,6 +10,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:invest_iq/Shortterm/Shortterm.dart';
+
+import '../Admin.dart';
 class Editshortermscreen extends StatefulWidget {
   final String documentId;
   final String imageUrl;
@@ -115,6 +117,19 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
         title: Text("Edit ShortTerm Data",style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,color: Colors.white),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home, size: 25, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Admin()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -419,7 +434,9 @@ class _EditshortermscreenState extends State<Editshortermscreen> {
                         }
                       }
                     },
-                    child: Text(
+                    child: isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
                       "Save Changes",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
