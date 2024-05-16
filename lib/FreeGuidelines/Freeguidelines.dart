@@ -82,10 +82,10 @@ class _FreeguidelinesState extends State<Freeguidelines> {
                         children: [
                           Text(
                             '${GuidelinesModel.headlines}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontStyle: FontStyle.italic,fontSize: 20),
                           ),
                           SizedBox(height: 30),
-                          Text('${GuidelinesModel.guidelines}'),
+                          Text('${GuidelinesModel.guidelines}',style: TextStyle(fontStyle: FontStyle.italic,color: Colors.black),),
                           SizedBox(height: 30),
                           TextButton(
                             onPressed: () {
@@ -105,7 +105,8 @@ class _FreeguidelinesState extends State<Freeguidelines> {
                         IconButton(
                           icon: Icon(Icons.edit, color: Colors.teal),
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Editfreeguidelinesscreen(

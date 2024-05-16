@@ -207,7 +207,8 @@ class Longterm extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
-              Navigator.push(
+              Navigator.pop(context);
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
               );
@@ -266,14 +267,14 @@ class Longterm extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Category: ${statusModel.category}'),
-                        Text('Status: ${statusModel.status}'),
-                        Text('Stock Name: ${statusModel.stockName}'),
-                        Text('CMP: ${statusModel.cmp}'),
-                        Text('Target: ${statusModel.target}'),
-                        Text('SL: ${statusModel.sl}'),
-                        Text('Remark: ${statusModel.remark}'),
-                        Text('Date: ${statusModel.date}'),
+                        Text('Category: ${statusModel.category}',style: TextStyle(color: Colors.black),),
+                        Text('Status: ${statusModel.status}',style: TextStyle(color: Colors.black),),
+                        Text('Stock Name: ${statusModel.stockName}',style: TextStyle(color: Colors.black),),
+                        Text('CMP: ${statusModel.cmp}',style: TextStyle(color: Colors.black),),
+                        Text('Target: ${statusModel.target}',style: TextStyle(color: Colors.black),),
+                        Text('SL: ${statusModel.sl}',style: TextStyle(color: Colors.black),),
+                        Text('Remark: ${statusModel.remark}',style: TextStyle(color: Colors.black),),
+                        Text('Date: ${statusModel.date}',style: TextStyle(color: Colors.black),),
                         Card(
                           surfaceTintColor: Colors.cyan,
                           elevation: 8.0,
@@ -299,15 +300,6 @@ class Longterm extends StatelessWidget {
                                   child: Image.network(
                                     imageUrl,
                                     fit: BoxFit.fill,
-                                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return CircularProgressIndicator(value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                            : null);
-                                      }
-                                    },
                                     errorBuilder: (context, error, stackTrace) => Text('Error loading image: $error'),
                                   ),
                                 );

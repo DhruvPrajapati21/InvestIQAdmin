@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class StatusModel {
   final String documentId;
-  final String category; // Add the id field
+  final String category;
   final String status;
   final String stockName;
   final String cmp;
@@ -28,7 +27,7 @@ class StatusModel {
 
     return StatusModel(
       documentId: documentId,
-      category: category,// Assign the document ID to the id field
+      category: category,
       status: status,
       stockName: stockName,
       cmp: cmp,

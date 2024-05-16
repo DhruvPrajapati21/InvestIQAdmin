@@ -21,7 +21,7 @@ class EditIPOScreen extends StatefulWidget {
 }
 
 class _EditIPOScreenState extends State<EditIPOScreen> {
-  List<String> ipo = ['Status', 'All', 'Current', 'Upcoming'];
+  List<String> ipo = ['Status','Current', 'Upcoming'];
   String? selectedIPO = 'Status';
   DateTime? selectedDate;
   DateTime? selectedDate2;
@@ -36,6 +36,9 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
   TextEditingController priceController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 
 
   Future<void> _selectDate(BuildContext context) async {
@@ -65,7 +68,6 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
     if (pickedDate != null && pickedDate != selectedDate2) {
       setState(() {
         selectedDate2 = pickedDate;
-        // Update the text in the dateController to reflect the new selected date
         dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate2!);
       });
     }
@@ -95,22 +97,22 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
       priceController.text = doc['price'];
       remarkController.text = doc['remark'];
 
-      // Handle the 'opendate' and 'closedate' fields correctly
+      // Handle the 'opendate' field correctly
       if (data['opendate'] is String) {
         // If it's a String, parse it as a DateTime
         selectedDate = DateFormat('dd/MM/yyyy').parse(data['opendate']);
-        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       } else if (data['opendate'] is Timestamp) {
         // If it's a Timestamp, convert it to a DateTime
         Timestamp timestamp = data['opendate'] as Timestamp;
         selectedDate = timestamp.toDate();
-        dateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
       }
 
-      // Handle the 'closedate' field in a similar manner
+      // Handle the 'closedate' field correctly
       if (data['closedate'] is String) {
+        // If it's a String, parse it as a DateTime
         selectedDate2 = DateFormat('dd/MM/yyyy').parse(data['closedate']);
       } else if (data['closedate'] is Timestamp) {
+        // If it's a Timestamp, convert it to a DateTime
         Timestamp timestamp = data['closedate'] as Timestamp;
         selectedDate2 = timestamp.toDate();
       }
@@ -125,9 +127,7 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
       });
     }
   }
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
           IconButton(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
             onPressed: () {
-              Navigator.push(
+              Navigator.pop(context);
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Admin()),
               );
@@ -388,8 +389,8 @@ class _EditIPOScreenState extends State<EditIPOScreen> {
                           }
 
                           // Convert DateTime objects to formatted date strings
-                          String formattedDate = selectedDate!.toLocal().toString().split(' ')[0];
-                          String formattedDate2 = selectedDate2!.toLocal().toString().split(' ')[0];
+                          String formattedDate = _formatDate(selectedDate!);
+                          String formattedDate2 = _formatDate(selectedDate2!);
 
                           // Update Firestore document with new data
                           await FirebaseFirestore.instance.collection('IPO').doc(widget.documentId).update({
