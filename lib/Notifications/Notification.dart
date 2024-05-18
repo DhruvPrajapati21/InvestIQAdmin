@@ -147,16 +147,21 @@ class _NotificationsState extends State<Notifications> {
                     });
                   },
                   background: Container(color: Colors.red),
-                  child: Card(
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        backgroundColor: Colors.deepOrangeAccent,
-                        child: Icon(Icons.notifications),
-                      ),
-                      title: Text(notification['title']),
-                      subtitle: Text(notification['body']),
-                      trailing: Text(
-                        _formatTimestamp(notification['timestamp']),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Card(
+                      color: Colors.white,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor:Colors.cyan,
+                          child: Image.asset(
+                              "assets/images/Logo_Tranferent.png"),
+                        ),
+                        title: Text(notification['title']),
+                        subtitle: Text(notification['body']),
+                        trailing: Text(
+                          _formatTimestamp(notification['timestamp']),
+                        ),
                       ),
                     ),
                   ),
